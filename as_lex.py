@@ -1,4 +1,5 @@
 import ply.lex as lex
+import re
 
 reserved = {
     #':': 'COLON',
@@ -17,12 +18,14 @@ tokens = (
     'PERIOD',
     'DECNUM',
     'HEXNUM',
+    'COMMENT',
     'IDENTIFIER'
     #'LDA'
     #'ADDA',
     #'STA',
     #'RMB'
 ) + tuple(reserved.values())
+
 
 t_POUND = r'\#'
 t_COLON = r'\:'
@@ -33,6 +36,12 @@ t_DECNUM = r'[0-9]+'
 t_HEXNUM = r'(\$|0x)[0-9A-Fa-f]+'
 
 t_ignore = r' \t'
+
+def t_COMMENT(t):
+    r'\;.*'
+    pass
+#    t.lexer.lineno += t.value.count('\n')
+    #return t
 
 def t_IDENTIFIER(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
@@ -49,14 +58,14 @@ def t_error(t):
     print('Illegal character \'%s\'' % t.value[0])
     t.lexer.skip(1)
 
-'''
+
+lex.lex(debug=1, reflags=re.IGNORECASE)
+
 def test(data):
-    lexer.input(data)
+    lex.input(data)
     while True:
-        tok = lexer.token()
+        tok = lex.token()
         if not tok:
             break
         print(tok)
-'''
 
-lex.lex(debug=1)
