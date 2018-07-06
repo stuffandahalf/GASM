@@ -17,22 +17,22 @@ all: $(DIST_DIR)/as-6x09
 run: $(DIST_DIR)/as-6x09
 	$<
 
-$(DIST_DIR)/as-6x09: $(OBJS)
+$(DIST_DIR)/as-6x09: $(OBJS) $(DIST_DIR)
 	$(CC) -o $@ $<
 
-$(BUILD_DIR)/lex.yy.c: $(SOURCE_DIR)/as-6x09.l
+$(BUILD_DIR)/lex.yy.c: $(SOURCE_DIR)/as-6x09.l $(BUILD_DIR)
 	$(LEX) -o $@ $<
 	
-$(BUILD_DIR)/y.tab.c $(BUILD_DIR)/y.tab.h: $(SOURCE_DIR)/as-6x09.y
+$(BUILD_DIR)/y.tab.c $(BUILD_DIR)/y.tab.h: $(SOURCE_DIR)/as-6x09.y $(BUILD_DIR)
 	$(YACC) -d -o $(BUILD_DIR)/y.tab.c $<
 	
-$(BUILD_DIR)/as-6x09.o: $(SOURCE_DIR)/as-6x09.c
+$(BUILD_DIR)/as-6x09.o: $(SOURCE_DIR)/as-6x09.c $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $@ $<
 
-$(BUILD_DIR)/lex.yy.o: $(BUILD_DIR)/lex.yy.c $(BUILD_DIR)/y.tab.h
+$(BUILD_DIR)/lex.yy.o: $(BUILD_DIR)/lex.yy.c $(BUILD_DIR)/y.tab.h $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $@ $<
 
-$(BUILD_DIR)/y.tab.o: $(BUILD_DIR)/y.tab.c
+$(BUILD_DIR)/y.tab.o: $(BUILD_DIR)/y.tab.c $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $@ $<
 
 $(BUILD_DIR):
