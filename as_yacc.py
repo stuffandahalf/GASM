@@ -3,16 +3,20 @@ import as_lex
 
 tokens = as_lex.tokens
 
+start = 'program'
+
 def p_program(p):
     '''
     program : program statement
             | statement
     '''
-    
+
+
 def p_statement(p):
     '''
     statement : label instruction value
     '''
+
 
 def p_label(p):
     '''
@@ -20,12 +24,14 @@ def p_label(p):
           |
     '''
 
+
 def p_instruction(p):
     '''
     instruction : LDA
                 | ADDA
                 | STA
     '''
+
 
 def p_value(p):
     '''
@@ -37,6 +43,7 @@ def p_value(p):
           | extended
     '''
     print p.__dict__
+
 
 def p_immediate(p):
     '''
@@ -52,12 +59,14 @@ def p_immediate(p):
         p[0] = int(p[2])
     #print(p[0])
 
+
 def p_error(p):
     if p:
         print("Syntax error at '%s'" % p.value)
     else:
         print("Syntax error at EOF")
-        
+
+
 asm_parser = yacc.yacc()
 
 def parse(data, debug=0):

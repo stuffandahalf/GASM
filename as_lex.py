@@ -52,6 +52,7 @@ def t_IDENTIFIER(t):
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
+    pass
 
 
 def t_error(t):
