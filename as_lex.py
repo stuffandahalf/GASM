@@ -16,6 +16,7 @@ tokens = (
     'COLON',
     'PERCENT',
     'PERIOD',
+    'COMMA',
     'DECNUM',
     'HEXNUM',
     'COMMENT',
@@ -31,11 +32,12 @@ t_POUND = r'\#'
 t_COLON = r'\:'
 t_PERCENT = r'\%'
 t_PERIOD = r'\.'
+t_COMMA = r'\,'
 
 t_DECNUM = r'[0-9]+'
 t_HEXNUM = r'(\$|0x)[0-9A-Fa-f]+'
 
-t_ignore = r' \t'#\r\f\v'
+t_ignore = r' 	'#\r\f\v'
 
 def t_COMMENT(t):
     r'\;.*'

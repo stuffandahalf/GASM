@@ -21,7 +21,7 @@ def main(args):
     #     if not s:
     #         continue
     #     as_yacc.asm_parser.parse(s)
-    
+
     arg_parser = argparse.ArgumentParser(description='6x09 family assembler.')
     arg_parser.add_argument('fname', metavar='FILE', type=str, nargs='?', help='The file to assemble.')
     arg_parser.add_argument('-m', '--arch', type=str, metavar='arch', default='6809', help='The architecture for which to assemble.')
@@ -29,7 +29,7 @@ def main(args):
     args = vars(arg_parser.parse_args())
     print args
     #if len(args) > 1:
-    
+
     src = None
     if args['fname'] == None:
         src = sys.stdin.read()
@@ -37,9 +37,11 @@ def main(args):
         f = open(args['fname'])
         src = f.read()
     print src
+
+    as_yacc.asm_parser.parse(src)
     #f = open(args['fname'])
     #print f.read()
-    
+
     return 0
 
 if __name__ == '__main__':

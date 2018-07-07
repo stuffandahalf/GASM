@@ -1,6 +1,8 @@
 import ply.yacc as yacc
 import as_lex
 
+from as_lib import *
+
 tokens = as_lex.tokens
 
 start = 'program'
@@ -14,7 +16,8 @@ def p_program(p):
 
 def p_statement(p):
     '''
-    statement : label instruction value
+    statement : label
+              | instruction
     '''
     print p.__dict__
     print '\n'
@@ -23,17 +26,50 @@ def p_statement(p):
 def p_label(p):
     '''
     label : IDENTIFIER COLON
-          |
     '''
 
-
-def p_instruction(p):
+def p_immediate(p):
     '''
-    instruction : LDA
-                | ADDA
-                | STA
+    immediate : POUND HEXNUM
+              | POUND DECNUM
+    '''
+    #print(p[2])
+    p[0] = Value(Addressing_Modes.Immediate, str_to_int(p[2]))
+
+    #print(p[0])
+
+def p_indexed(p):
+    '''
+    indexed :
     '''
 
+def p_direct_or_extended(p):
+    '''
+    direct_or_extended : DECNUM
+                       | HEXNUM
+    '''
+    p[0] = str_to_int(p[1])
+    if p[0] > 0xFF:
+        p[0] = Value(Addressing_Modes.Extended, p[0])
+    else:
+        p[0] = Value(Addressing_Modes.Direct, p[0])
+    print p[0]
+
+def p_instruction_lda(p):
+    '''
+    instruction_lda : LDA immediate
+    '''
+    print p[2]
+
+def p_instruction_adda(p):
+    '''
+    instruction_adda : ADDA immediate
+    '''
+
+def p_instruction_sta(p):
+    '''
+    instruction_sta : STA direct_or_extended
+    '''
 
 def p_value(p):
     '''
@@ -47,20 +83,12 @@ def p_value(p):
     print p.__dict__
 
 
-def p_immediate(p):
+def p_instruction(p):
     '''
-    immediate : POUND HEXNUM
-              | POUND DECNUM
+    instruction : instruction_lda
+                | instruction_adda
+                | instruction_sta
     '''
-    #print(p[2])
-    if p[2].startswith('$'):
-        p[0] = int(p[2][1:], 16)
-    elif p[2].startswith('0x'):
-        p[0] = int(p[2][2:], 16)
-    else:
-        p[0] = int(p[2])
-    #print(p[0])
-
 
 def p_error(p):
     if p:
