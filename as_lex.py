@@ -35,7 +35,7 @@ t_PERIOD = r'\.'
 t_DECNUM = r'[0-9]+'
 t_HEXNUM = r'(\$|0x)[0-9A-Fa-f]+'
 
-t_ignore = r' \t'
+t_ignore = r' \t'#\r\f\v'
 
 def t_COMMENT(t):
     r'\;.*'
@@ -60,7 +60,7 @@ def t_error(t):
     t.lexer.skip(1)
 
 
-lex.lex(debug=1, reflags=re.IGNORECASE)
+lex.lex(debug=0, reflags=re.IGNORECASE)
 
 def test(data):
     lex.input(data)
@@ -69,4 +69,3 @@ def test(data):
         if not tok:
             break
         print(tok)
-

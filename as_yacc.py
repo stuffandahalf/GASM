@@ -16,6 +16,8 @@ def p_statement(p):
     '''
     statement : label instruction value
     '''
+    print p.__dict__
+    print '\n'
 
 
 def p_label(p):
