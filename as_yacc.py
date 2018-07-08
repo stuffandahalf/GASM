@@ -59,13 +59,16 @@ def p_direct_or_extended(p):
 def p_instruction_lda(p):
     '''
     instruction_lda : LDA immediate
+                    | LDA direct_or_extended
     '''
     print p[2]
 
 def p_instruction_adda(p):
     '''
     instruction_adda : ADDA immediate
+                     | ADDA direct_or_extended
     '''
+    print p.__dict__
 
 def p_instruction_sta(p):
     '''
