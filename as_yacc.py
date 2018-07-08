@@ -3,8 +3,9 @@ import as_lex
 
 from as_lib import *
 
-tokens = as_lex.tokens
+starting_address = 0x0
 
+tokens = as_lex.tokens
 start = 'program'
 
 def p_program(p):
@@ -89,6 +90,7 @@ def p_instruction(p):
                 | instruction_adda
                 | instruction_sta
     '''
+
 
 def p_error(p):
     if p:

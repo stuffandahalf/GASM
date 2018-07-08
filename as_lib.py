@@ -9,7 +9,6 @@ def str_to_int(hex_string):
     else:
         return int(hex_string)
 
-#addressing_modes = Enum('Inherent', 'Immediate', 'Direct', 'Indirect', 'Extended')
 Addressing_Modes = Enum('Addressing_Modes', 'Inherent Immediate Direct Indirect Extended')
 
 Value = namedtuple("Value", "addr_mode value")
