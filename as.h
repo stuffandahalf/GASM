@@ -1,6 +1,8 @@
 #ifndef AS_H
 #define AS_H
 
+#include <stdint.h>
+
 enum addr_mode {
     Inherent,
     Immediate,
@@ -18,5 +20,8 @@ typedef struct {
     uint16_t opcode;
     Argument arg;
 } Instruction;
+
+char *arch;
+char *out_fname;
 
 #endif

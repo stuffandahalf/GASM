@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "y.tab.h"
 
-const short DEBUG = 1;
+const short DEBUG = 0;
 
 #define dprint(str) { \
     if (DEBUG) { \
@@ -42,20 +42,3 @@ int line_num = 1;
 
 %%
 
-int _main(int argc, char **argv) {
-    /*argc--; argv++;
-
-    FILE *fd;
-
-    if (argc) {
-        if (!(fd = fopen(argv[0], "r"))) {
-            perror("Error: ");
-            return 1;
-        }
-        yyset_in(fd);
-    }*/
-    yyparse();
-    //yylex();
-    //fclose(fd);
-    return 0;
-}

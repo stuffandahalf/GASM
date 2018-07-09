@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <getopt.h>
+#include "as.h"
 #include "y.tab.h"
 
 typedef enum {
@@ -17,7 +18,8 @@ char *architectures[] = {
 bool supported_arch(char *string);
 
 int main(int argc, char **argv) {
-    char *arch = "6809";
+    arch = "6809";
+    out_fname = "a.out";
 
     struct option longopts[] = {
         {"arch", required_argument, NULL, 'm'},

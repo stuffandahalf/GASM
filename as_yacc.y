@@ -7,7 +7,6 @@
 
 %{
 #include <stdio.h>
-#include <stdint.h>
 #include "as.h"
 
 #define YYSTYPE char *
@@ -21,6 +20,8 @@ void yyerror(const char *str) {
     fprintf(stderr, "error: %s on line number %d\n", str, line_num);
 }
 
+void emit(Instruction inst);
+
 %}
 
 %%
@@ -29,7 +30,7 @@ program : program statement
         ;
 
 statement : label
-          | instruction
+          | instruction { /*emit($1);*/ }
           ;
 
 label : IDENTIFIER COLON
