@@ -1,12 +1,12 @@
 CC=cc
-CFLAGS=
+CFLAGS=-s
 LEX=lex
 LEXFLAGS=
 YACC=yacc
 YACCFLAGS=-d
 
 as-6x09: lex.yy.c y.tab.c y.tab.h
-	$(CC) -o $@ $?
+	$(CC) -o $@ lex.yy.c y.tab.c
 
 lex.yy.c: as_lex.l
 	$(LEX) $(LEXFLAGS) $<
