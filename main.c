@@ -25,6 +25,8 @@ int main(int argc, char **argv) {
     };
 
     int c;
+    //while (optind < argc) {
+    //    if ((c = getopt_long(argc, argv, "m:", longopts, NULL)) != -1) {
     while ((c = getopt_long(argc, argv, "m:", longopts, NULL)) != -1) {
         switch (c) {
         case 'm':
@@ -39,6 +41,15 @@ int main(int argc, char **argv) {
         case 0:
             break;
         }
+    }
+        /*else {
+            printf("%s\n", argv[optind++]);
+            //optind++;
+        }
+    }*/
+    
+    while (optind < argc) {
+        printf("%s\n", argv[optind++]);
     }
     
     printf("Chosen architecture is: %s\n", arch);
