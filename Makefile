@@ -18,6 +18,10 @@ y.tab.c y.tab.h: as_yacc.y
 run: as-6x09
 	./$<
 
+.PHONY: debug
+debug: as-6x09
+	valgrind ./$<
+
 .PHONY: clean
 clean:
 	rm -f y.tab.*
