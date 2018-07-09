@@ -33,3 +33,7 @@
 
 build
 dist
+
+y.tab.*
+lex.yy.c
+as-6x09
