@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "y.tab.h"
 
-const short DEBUG = 0;
+const short DEBUG = 1;
 
 #define dprint(str) { \
     if (DEBUG) { \
@@ -27,6 +27,8 @@ int line_num = 1;
 ","                 { dprint("COMMA"); return COMMA; }
 
 "LDA"               { dprint("LDA"); return LDA; }
+"ADDA"              { dprint("ADDA"); return ADDA; }
+"RMB"               { dprint("RMB"); return RMB; }
 
 [0-9]+              { dprint("DECNUM"); return DECNUM; }
 ($|0x)[0-9A-F]+     { dprint("HEXNUM"); return HEXNUM; }

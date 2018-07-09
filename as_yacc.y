@@ -1,33 +1,25 @@
 %token DECNUM HEXNUM IDENTIFIER
 %token POUND COLON PERCENT PERIOD COMMA
-%token LDA
+%token LDA ADDA
+%token RMB
 
 %start program
 
 %{
 #include <stdio.h>
+#include <stdint.h>
+#include "as.h"
 
 #define YYSTYPE char *
 
 extern int line_num;
 extern int yylex();
 
+uint16_t address = 0;
+
 void yyerror(const char *str) {
     fprintf(stderr, "error: %s on line number %d\n", str, line_num);
 }
-
-enum addr_mode {
-    Inherent,
-    Immediate,
-    Direct,
-    Indirect,
-    Extended
-};
-
-typedef struct {
-    enum addr_mode mode;
-    int value;
-} Argument;
 
 %}
 
@@ -55,10 +47,15 @@ direct_or_indexed : DECNUM
                   ;
 
 instruction : instruction_lda
+            | instruction_adda
             ;
 
-instruction_lda : LDA immediate
-                | LDA
+instruction_lda : LDA immediate             { printf("%d\n", LDA); }
+                | LDA direct_or_indexed
                 ;
+
+instruction_adda : ADDA immediate
+                 | ADDA direct_or_indexed
+                 ;
 
 %%
