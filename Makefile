@@ -5,8 +5,8 @@ LEXFLAGS=
 YACC=yacc
 YACCFLAGS=-d
 
-as-6x09: lex.yy.c y.tab.c y.tab.h
-	$(CC) -o $@ lex.yy.c y.tab.c
+as-6x09: main.c lex.yy.c y.tab.c y.tab.h
+	$(CC) -o $@ main.c lex.yy.c y.tab.c
 
 lex.yy.c: as_lex.l
 	$(LEX) $(LEXFLAGS) $<
