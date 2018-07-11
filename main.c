@@ -27,9 +27,7 @@ int main(int argc, char **argv) {
     };
 
     int c;
-    //while (optind < argc) {
-    //    if ((c = getopt_long(argc, argv, "m:", longopts, NULL)) != -1) {
-    while ((c = getopt_long(argc, argv, "m:", longopts, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "m:o:", longopts, NULL)) != -1) {
         switch (c) {
         case 'm':
             if (supported_arch(optarg)) {
@@ -40,6 +38,9 @@ int main(int argc, char **argv) {
                 return 1;
             }
             break;
+        case 'o':
+            out_fname = optarg;
+            printf("%s\n", out_fname);
         case 0:
             break;
         }

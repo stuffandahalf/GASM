@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+extern char *arch;
+
 #define ELF_NIDENT 16
 
 enum ELF_Ident {
@@ -17,6 +19,23 @@ enum ELF_Ident {
     EI_OSABI,
     EI_ABIVERSION,
     EI_PAD
+};
+
+enum ELF_OSABI {
+    GANOS_6809 = 140,
+    GANOS_6309 = 141
+};
+
+enum ELF_Type {
+    ET_NONE = 0x00,
+    ET_REL  = 0x01,
+    ET_EXEC = 0x02,
+    ET_DYN  = 0x03,
+    ET_CORE = 0x04,
+    ET_LOOS = 0xFE00,
+    ET_HIOS = 0xFEFF,
+    ET_LOPROC = 0xFF00,
+    ET_HIPROC = 0xFFFF
 };
 
 typedef struct {
