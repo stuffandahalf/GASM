@@ -27,3 +27,4 @@ clean:
 	rm -f y.tab.*
 	rm -f lex.yy.c
 	rm -f as-6x09
+	rm -f a.out

@@ -17,16 +17,11 @@
 #include <stdio.h>
 #include "as.h"
 
-//#ifndef YYSTYPE
-//#define YYSTYPE char *
-//#define YYSTYPE int;
-//#endif
-
-//#define YYSTYPE int
-
 extern int line_num;
 extern YYSTYPE yylval;
 extern int yylex();
+
+extern FILE *out_file;
 
 uint16_t address = 0;
 

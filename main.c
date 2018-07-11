@@ -1,13 +1,14 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <string.h>
 #include <getopt.h>
 #include "as.h"
 #include "y.tab.h"
 
-typedef enum {
+/*typedef enum {
     false,
     true
-} bool;
+} bool;*/
 
 #define ARCH_NUM 2
 char *architectures[] = {
@@ -15,12 +16,12 @@ char *architectures[] = {
     "6309"
 };
 
-bool supported_arch(char *string);
+bool supported_arch(const char *string);
 
 int main(int argc, char **argv) {
     arch = "6809";
     out_fname = "a.out";
-
+    
     struct option longopts[] = {
         {"arch", required_argument, NULL, 'm'},
         {0, 0, 0, 0}
@@ -45,25 +46,22 @@ int main(int argc, char **argv) {
             break;
         }
     }
-        /*else {
-            printf("%s\n", argv[optind++]);
-            //optind++;
-        }
-    }*/
-    
+
     while (optind < argc) {
         printf("%s\n", argv[optind++]);
     }
     
     printf("Chosen architecture is: %s\n", arch);
-//    printf("yylex returns %d\n", yylex());
-    //yydebug = 1;
+    printf("Output file is: %s\n", out_fname);
+    
+    out_file = fopen(out_fname, "w");
+
     yyparse();
     return 0;
 }
 
-bool supported_arch(char *string) {
-    for (size_t i = 0; i < ARCH_NUM; i++) {
+bool supported_arch(const char *string) {
+    for (uint8_t i = 0; i < ARCH_NUM; i++) {
         if (!strcmp(string, architectures[i])) {
             return true;
         }

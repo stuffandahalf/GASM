@@ -1,6 +1,7 @@
 #ifndef AS_H
 #define AS_H
 
+#include <stdio.h>
 #include <stdint.h>
 
 enum addr_mode {
@@ -23,5 +24,6 @@ typedef struct {
 
 char *arch;
 char *out_fname;
+FILE *out_file;
 
 #endif
