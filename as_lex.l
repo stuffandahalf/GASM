@@ -14,10 +14,18 @@ const short DEBUG = 0;
 extern YYSTYPE yylval;
 
 int line_num = 1;
+
+int yywrap() {
+    puts("yywrap is called");
+    //exit(0);
+    return 1;
+}
 %}
 
 %option caseless
-%option noyywrap
+%{
+//%option noyywrap
+%}
 
 %%
 
@@ -50,4 +58,5 @@ int line_num = 1;
 
 [ \t]+
 \n                  { line_num++; }
+.
 

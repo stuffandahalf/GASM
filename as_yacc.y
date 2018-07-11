@@ -45,6 +45,7 @@ program : program statement
 
 statement : label
           | instruction { /*emit($1);*/ }
+          |
           ;
 
 label : IDENTIFIER COLON { printf("%s\n", $<svalue>1); }

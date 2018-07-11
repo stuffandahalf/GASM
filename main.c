@@ -56,7 +56,8 @@ int main(int argc, char **argv) {
     }
     
     printf("Chosen architecture is: %s\n", arch);
-
+//    printf("yylex returns %d\n", yylex());
+    //yydebug = 1;
     yyparse();
     return 0;
 }
