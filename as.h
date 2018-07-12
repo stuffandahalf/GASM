@@ -25,5 +25,7 @@ typedef struct {
 char *arch;
 char *out_fname;
 FILE *out_file;
+ 
+//#define _6309 1
 
 #endif

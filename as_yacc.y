@@ -107,7 +107,6 @@ program : program statement
 
 statement : label
           | instruction { /*emit($1);*/ }
-          |
           ;
 
 label : IDENTIFIER COLON { printf("%s\n", $<svalue>1); }
@@ -121,9 +120,9 @@ indexed : OPENBRACKET DECNUM CLOSEBRACKET
         | OPENBRACKET HEXNUM CLOSEBRACKET
         ;
 
-direct_or_indexed : DECNUM
-                  | HEXNUM
-                  ;
+direct_or_extended : DECNUM
+                   | HEXNUM
+                   ;
 
 instruction : instruction_abx
             | instruction_adca
@@ -147,14 +146,13 @@ instruction_lda : LDA immediate
                 {
                     printf("%d\n", $<ivalue>2);
                 }
-                | LDA direct_or_indexed
+                | LDA direct_or_extended
                 ;
 
 instruction_adda : ADDA immediate
-                 | ADDA direct_or_indexed
+                 | ADDA direct_or_extended
                  ;
 
-instruction_sta : STA direct_or_indexed
-                | STA extended
+instruction_sta : STA direct_or_extended
                 ;
 %%

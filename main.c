@@ -54,6 +54,9 @@ int main(int argc, char **argv) {
     printf("Chosen architecture is: %s\n", arch);
     printf("Output file is: %s\n", out_fname);
     
+    if (!strcmp("6309", arch)) {
+        BEGIN(_6309);
+    }
     out_file = fopen(out_fname, "w");
 
     yyparse();

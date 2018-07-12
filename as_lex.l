@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "y.tab.h"
 
-const short DEBUG = 0;
+const short DEBUG = 1;
 
 #define dprint(str) { \
     if (DEBUG) { \
@@ -11,6 +11,13 @@ const short DEBUG = 0;
     } \
 }
 
+#define instr_6309(instruction) { \
+    if (!strcmp("6309", arch)) { \
+        return (instruction); \
+    } \
+}
+
+extern char *arch;
 extern YYSTYPE yylval;
 
 int line_num = 1;
@@ -20,12 +27,15 @@ int yywrap() {
     //exit(0);
     return 1;
 }
+
 %}
 
 %option caseless
 %{
 //%option noyywrap
 %}
+
+%start _6309
 
 %%
 
@@ -39,8 +49,12 @@ int yywrap() {
 ","                 { dprint("COMMA"); return COMMA; }
 
 "ABX"               { dprint("ABX"); return ABX; }
+
 "ADCA"              { dprint("ADCA"); return ADCA; }
 "ADCB"              { dprint("ADCB"); return ADCB; }
+"ADCD"              { dprint("ADCD"); return ADCD; }
+<_6309>"ADCR"       { dprint("ADCR"); return ADCR; }
+
 "LDA"               { dprint("LDA"); return LDA; }
 "ADDA"              { dprint("ADDA"); return ADDA; }
 "RMB"               { dprint("RMB"); return RMB; }
@@ -56,7 +70,7 @@ int yywrap() {
 
 ";".*               { dprint("COMMENT"); }
 
-[ \t]+
+[ \t    ]+
 \n                  { line_num++; }
 .
 
