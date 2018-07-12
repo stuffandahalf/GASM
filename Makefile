@@ -3,7 +3,7 @@ CFLAGS=-s
 LEX=lex
 LEXFLAGS=
 YACC=yacc
-YACCFLAGS=-d
+YACCFLAGS=-d --debug --verbose
 
 as-6x09: main.c lex.yy.c y.tab.c y.tab.h elf.c elf.h
 	$(CC) -o $@ main.c lex.yy.c y.tab.c elf.c
@@ -28,3 +28,4 @@ clean:
 	rm -f lex.yy.c
 	rm -f as-6x09
 	rm -f a.out
+	rm -f y.output

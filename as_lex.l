@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include "y.tab.h"
 
-const short DEBUG = 1;
+//const short DEBUG = 1;
 
 #define dprint(str) { \
-    if (DEBUG) { \
+    if (yydebug) { \
         puts(str); \
     } \
 }
@@ -17,6 +17,7 @@ const short DEBUG = 1;
     } \
 }
 
+extern int yydebug;
 extern char *arch;
 extern YYSTYPE yylval;
 

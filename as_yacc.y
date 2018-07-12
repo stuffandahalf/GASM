@@ -1,6 +1,7 @@
 %token DECNUM HEXNUM IDENTIFIER
 %token OPENBRACKET CLOSEBRACKET
 %token POUND COLON PERCENT PERIOD COMMA
+
 %token ABX
 %token ADCA ADCB ADCD ADCR
 %token ADDA ADDB ADDE ADDF
@@ -40,7 +41,7 @@
 %token LBNE LBPL LBRA LBRN LBSR LBVC
 %token LBVS
 %token LDA LDB LDE LDF
-%token LDD LDS LDU LDS LDW LDX LDY
+%token LDD LDS LDU LDW LDX LDY
 %token LDBT LDMD LDQ
 %token LEAS LEAU LEAX LEAY
 %token LSLA LSLB LSL LSLD
@@ -90,6 +91,7 @@ extern int yylex();
 extern FILE *out_file;
 
 uint16_t address = 0;
+int yydebug = 1;
 
 void yyerror(const char *str) {
     fprintf(stderr, "error: %s on line number %d\n", str, line_num);
@@ -107,10 +109,18 @@ program : program statement
 
 statement : label
           | instruction { /*emit($1);*/ }
+          | 
           ;
 
-label : IDENTIFIER COLON { printf("%s\n", $<svalue>1); }
+/*label : absolute_label
+      | relative_label
+      ;*/
+
+label : IDENTIFIER COLON { $<svalue>$ = $<svalue>1; printf("%s\n", $<svalue>1); }
       ;
+
+relative_label : PERIOD IDENTIFIER COLON { $<svalue>$ = $<svalue>2; }
+               ;
 
 immediate : POUND DECNUM { $<ivalue>$ = yylval.ivalue; }
           | POUND HEXNUM { $<ivalue>$ = yylval.ivalue; }
