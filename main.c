@@ -42,14 +42,18 @@ int main(int argc, char **argv) {
         case 'o':
             out_fname = optarg;
             printf("%s\n", out_fname);
+            extern FILE *yyin;
         case 0:
             break;
         }
     }
 
     while (optind < argc) {
-        printf("%s\n", argv[optind++]);
+//        printf("%s\n", argv[optind++]);
+        extern FILE *yyin;
+        yyin = fopen(argv[optind++], "r");
     }
+    
     
     printf("Chosen architecture is: %s\n", arch);
     printf("Output file is: %s\n", out_fname);

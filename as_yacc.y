@@ -137,6 +137,12 @@ direct_or_extended : DECNUM
 instruction : instruction_abx
             | instruction_adca
             | instruction_adda
+            | instruction_inca
+            | instruction_incb
+            | instruction_incd
+            | instruction_ince
+            | instruction_incf
+            | instruction_incw
             | instruction_lda
             | instruction_sta
             ;
@@ -144,13 +150,33 @@ instruction : instruction_abx
 instruction_abx : ABX
                 {
                     printf("ABX: %X\n", 0x3A);
+                    address++;
                 }
                 ;
 
 instruction_adca : ADCA immediate
                  {
-                     printf("ADCA %d\n", $<ivalue>2);
+                     printf("ADCA %X\n", $<ivalue>2);
+                     address++;
                  }
+
+instruction_inca : INCA
+                 ;
+
+instruction_incb : INCB
+                 ;
+
+instruction_incd : INCD
+                 ;
+
+instruction_ince : INCE
+                 ;
+
+instruction_incf : INCF
+                 ;
+
+instruction_incw : INCW
+                 ;
 
 instruction_lda : LDA immediate
                 {

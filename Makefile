@@ -3,7 +3,7 @@ CFLAGS=-s
 LEX=lex
 LEXFLAGS=
 YACC=yacc
-YACCFLAGS=-d --debug --verbose
+YACCFLAGS=-d #--debug --verbose
 
 as-6x09: main.c lex.yy.c y.tab.c y.tab.h elf.c elf.h
 	$(CC) -o $@ main.c lex.yy.c y.tab.c elf.c
