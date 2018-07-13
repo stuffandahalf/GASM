@@ -117,7 +117,7 @@ statement : label
       ;*/
 
 label : IDENTIFIER COLON { $<svalue>$ = $<svalue>1; printf("%s\n", $<svalue>1); }
-      | PERIOD IDENTIFIER COLON {$<svalue>$ = $<svalue>2; printf("%s\n", $<svalue>2; }
+      /*| PERIOD IDENTIFIER COLON {$<svalue>$ = $<svalue>2; printf("%s\n", $<svalue>2; }*/
       ;
 
 immediate : POUND DECNUM { $<ivalue>$ = yylval.ivalue; }
@@ -147,7 +147,9 @@ instruction : instruction_abx
 
 instruction_abx : ABX
                 {
-                    printf("ABX: %X\n", 0x3A);
+                    //printf("ABX: %X\n", 0x3A);
+                    uint8_t opcode[] = { 0x3A };
+                    fwrite(opcode, sizeof(opcode), 1, out_file);
                     address++;
                 }
                 ;
@@ -155,8 +157,11 @@ instruction_abx : ABX
 instruction_adca : ADCA immediate
                  {
                      printf("ADCA %X\n", $<ivalue>2);
+                     uint8_t opcode[] = { 0x89, $<ivalue>2 };
+                     fwrite(opcode, sizeof(opcode), 1, out_file);
                      address++;
                  }
+                 ;
 
 instruction_inca : INCA
                  ;

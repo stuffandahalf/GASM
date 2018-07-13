@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
     /*if (!strcmp("6309", arch)) {
         BEGIN(_6309);
     }*/
-    out_file = fopen(out_fname, "w");
+    out_file = fopen(out_fname, "wb");
     
     //yylex();
     yyparse();
