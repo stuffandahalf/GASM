@@ -91,7 +91,7 @@ extern int yylex();
 extern FILE *out_file;
 
 uint16_t address = 0;
-int yydebug = 1;
+int yydebug = 0;
 
 void yyerror(const char *str) {
     fprintf(stderr, "error: %s on line number %d\n", str, line_num);
@@ -117,10 +117,8 @@ statement : label
       ;*/
 
 label : IDENTIFIER COLON { $<svalue>$ = $<svalue>1; printf("%s\n", $<svalue>1); }
+      | PERIOD IDENTIFIER COLON {$<svalue>$ = $<svalue>2; printf("%s\n", $<svalue>2; }
       ;
-
-relative_label : PERIOD IDENTIFIER COLON { $<svalue>$ = $<svalue>2; }
-               ;
 
 immediate : POUND DECNUM { $<ivalue>$ = yylval.ivalue; }
           | POUND HEXNUM { $<ivalue>$ = yylval.ivalue; }
