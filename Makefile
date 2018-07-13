@@ -22,6 +22,11 @@ run: as-6x09
 debug: as-6x09
 	valgrind ./$<
 
+.PHONY: dump
+dump: as-6x09
+	./as-6x09 < test1.S
+	hexdump -v -e '/1 "%02x\n"' a.out
+
 .PHONY: clean
 clean:
 	rm -f y.tab.*
