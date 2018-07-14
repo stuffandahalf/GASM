@@ -98,7 +98,9 @@ void yyerror(const char *str) {
     remove(out_fname);
 }
 
-void emit(Instruction inst);
+//void emit(Instruction inst);
+
+#define emit(instruction) fwrite(instruction, sizeof(instruction), 1, out_file)
 
 %}
 
@@ -134,7 +136,9 @@ direct_or_extended : DECNUM
 
 instruction : instruction_abx
             | instruction_adca
-            | instruction_adda
+            | instruction_adcb
+            | instruction_adcr
+/*            | instruction_adda*/
             | instruction_inca
             | instruction_incb
             | instruction_incd
@@ -142,14 +146,17 @@ instruction : instruction_abx
             | instruction_incf
             | instruction_incw
             | instruction_lda
+            | instruction_ldb
+            | instruction_lde
+            | instruction_ldf
             | instruction_sta
             ;
 
 instruction_abx : ABX
                 {
                     //printf("ABX: %X\n", 0x3A);
-                    uint8_t opcode[] = { 0x3A };
-                    fwrite(opcode, sizeof(opcode), 1, out_file);
+                    uint8_t instr[] = { 0x3A };
+                    emit(instr);
                     address++;
                 }
                 ;
@@ -157,40 +164,145 @@ instruction_abx : ABX
 instruction_adca : ADCA immediate
                  {
                      printf("ADCA %X\n", $<ivalue>2);
-                     uint8_t opcode[] = { 0x89, $<ivalue>2 };
-                     fwrite(opcode, sizeof(opcode), 1, out_file);
+                     uint8_t instr[] = { 0x89, $<ivalue>2 };
+                     emit(instr);
+                     address++;
+                    
+                     uint8_t imm[] = { $<ivalue>2 & 0xFF };
+                     emit(imm);
+                     address++;
+                 }
+                 ;
+
+instruction_adcb : ADCB immediate
+                 {
+                     uint8_t instr[] = { 0xC9 };
+                     emit(instr);
+                     address++;
+
+                     uint8_t imm[] = { $<ivalue>2 & 0xFF };
+                     emit(imm);
+                     address++;
+                 }
+                 ;
+
+instruction_adcd : ADCD immediate
+                 {
+                     uint8_t instr[] = { 0x10, 0x89 };
+                     emit(instr);
+                     address += 2;
+                    
+                     uint8_t imm[] = { $<ivalue>2 & 0xFF };
+                     emit(imm);
+                     address++;
+                 }
+                 ;
+
+instruction_adcr : ADCR immediate
+                 {
+                     uint8_t instr[] = { 0x10, 0x31 };
+                     emit(instr);
+                     address += 2;
+
+                     uint8_t imm[] = { $<ivalue>2 & 0xFF };
+                     emit(imm);
                      address++;
                  }
                  ;
 
 instruction_inca : INCA
+                 {
+                     uint8_t instr[] = { 0x4C };
+                     emit(instr);
+                     address++;
+                 }
                  ;
 
 instruction_incb : INCB
+                 {
+                     uint8_t instr[] = { 0x5C };
+                     emit(instr);
+                     address++;
+                 }
                  ;
 
 instruction_incd : INCD
+                 {
+                     uint8_t instr[] = { 0x10, 0x4C };
+                     emit(instr);
+                     address += 2;
+                 }
                  ;
 
 instruction_ince : INCE
+                 {
+                     uint8_t instr[] = { 0x11, 0x4C };
+                     emit(instr);
+                     address += 2;
+                 }
                  ;
 
 instruction_incf : INCF
+                 {
+                     uint8_t instr[] = { 0x11, 0x5C };
+                     emit(instr);
+                     address += 2;
+                 }
                  ;
 
 instruction_incw : INCW
+                 {
+                     uint8_t instr[] = { 0x10, 0x5C };
+                     emit(instr);
+                     address += 2;
+                 }
                  ;
 
 instruction_lda : LDA immediate
                 {
-                    printf("%d\n", $<ivalue>2);
+                    //printf("%d\n", $<ivalue>2);
+                    uint8_t instr[] = { 0x86 };
+                    emit(instr);
+                    address++;
                 }
                 | LDA direct_or_extended
                 ;
 
-instruction_adda : ADDA immediate
-                 | ADDA direct_or_extended
-                 ;
+instruction_ldb : LDB immediate
+                {
+                    uint8_t instr[] = { 0xC6 };
+                    emit(instr);
+                    address++;
+
+                    uint8_t imm[] = { $<ivalue>2 & 0xFF };
+                    emit(imm);
+                    address++;
+                }
+                ;
+
+instruction_lde : LDE immediate
+                {
+                    uint8_t instr[] = { 0x11, 0x86 };
+                    emit(instr);
+                    address += 2;
+
+                    uint8_t imm[] = { $<ivalue>2 & 0xFF };
+                    emit(imm);
+                    address++;
+                }
+                ;
+
+instruction_ldf : LDF immediate
+                {
+                    uint8_t instr[] = { 0x11, 0xC6 };
+                    emit(instr);
+                    address += 2;
+
+                    uint8_t imm[] = { $<ivalue>2 & 0xFF };
+                    emit(imm);
+                    address++;
+                }
+                ;
 
 instruction_sta : STA direct_or_extended
                 ;
