@@ -26,6 +26,7 @@ int yywrap() {
 %option caseless
 /*%option noyywrap*/
 /*%option nodefault*/
+/*%option stack*/
 
 %start _6309
 
