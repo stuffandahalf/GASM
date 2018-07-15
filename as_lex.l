@@ -31,7 +31,7 @@ int yywrap() {
 
 %%
 
-"["                 { dprint("OPENBRACKET"); return OPENBRACKET; }
+"["                 { dprint("OPENBRACKET"); printf("%d\n", _6309); return OPENBRACKET; }
 "]"                 { dprint("CLOSEBRACKET"); return CLOSEBRACKET; }
 
 #                   { dprint("POUND"); return POUND; }
@@ -331,4 +331,3 @@ int yywrap() {
 [ \t    ]+
 \n                  { line_num++; }
 .
-
