@@ -477,6 +477,9 @@ instruction_lda : LDA immediate
                     //printf("%d\n", $<ivalue>2);
                     uint8_t opcode[] = { 0x86 };
                     write_bytes(opcode, sizeof(opcode));
+
+                    uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
+                    write_bytes(imm_value, sizeof(imm_value));
                 }
                 /*| LDA direct
                 | LDA indexed
