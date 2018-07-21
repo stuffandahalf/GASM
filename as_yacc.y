@@ -82,9 +82,13 @@
 
 %{
 #include <stdio.h>
+#include <string.h>
 #include "as.h"
+#include "linkedlist.h"
+#include "label.h"
 
 extern int line_num;
+extern LinkedList *labels;
 extern YYSTYPE yylval;
 extern int yylex();
 
@@ -102,12 +106,9 @@ void yyerror(const char *str) {
 
 //#define emit(instruction) fwrite(instruction, sizeof(instruction), 1, out_file)
 
-void write_bytes(uint8_t *bytes, size_t num){
-    extern FILE *out_file;
+void write_bytes(uint8_t *bytes, size_t num);
 
-    fwrite(bytes, num, sizeof(uint8_t), out_file);
-    address += num;
-}
+label_t *find_label(char *id);
 
 %}
 
@@ -125,7 +126,19 @@ statement : label
       | relative_label
       ;*/
 
-label : IDENTIFIER COLON { $<svalue>$ = $<svalue>1; printf("%s\n", $<svalue>1); }
+label : IDENTIFIER COLON 
+      {
+          //$<svalue>$ = $<svalue>1;
+          //printf("%s\n", $<svalue>1);
+          for (char *c = $<svalue>1; *c != '\0'; c++) {
+              if (*c == ':') {
+                  *c = '\0';
+                  break;
+              }
+          }
+          llappend(labels, newLabel(strdup($<svalue>1), address));
+          //resolve_reference();
+      }
       /*| PERIOD IDENTIFIER COLON {$<svalue>$ = $<svalue>2; printf("%s\n", $<svalue>2; }*/
       ;
 
@@ -521,3 +534,20 @@ instruction_ldf : LDF immediate
                 | STA extended
                 ;*/
 %%
+
+void write_bytes(uint8_t *bytes, size_t num){
+    extern FILE *out_file;
+
+    fwrite(bytes, num, sizeof(uint8_t), out_file);
+    address += num;
+}
+
+label_t *find_label(char *id) {
+    for (int i = 0; i < labels->size; i++) {
+        label_t *label = llat(labels, i);
+        if (!strcmp(id, label->id)) {
+            return label;
+        }
+    }
+    return NULL;
+}

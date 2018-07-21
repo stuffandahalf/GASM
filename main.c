@@ -23,6 +23,7 @@ int find_state(char *arch);
 int main(int argc, char **argv) {
     arch = "6809";
     out_fname = "a.out";
+    labels = newLinkedList();
 
     struct option longopts[] = {
         {"arch", required_argument, NULL, 'm'},
@@ -69,6 +70,12 @@ int main(int argc, char **argv) {
 
     //yylex();
     yyparse();
+    
+    for (size_t i = 0; i < labels->size; i++) {
+        label_t *l = /*(label_t *)*/llat(labels, i);
+        printf("%s\t%d\n", l->id, l->address);
+    }
+    deleteLinkedList(labels);
     return 0;
 }
 

@@ -3,6 +3,8 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include "linkedlist.h"
+#include "label.h"
 
 enum addr_mode {
     Inherent,
@@ -25,7 +27,7 @@ typedef struct {
 char *arch;
 char *out_fname;
 FILE *out_file;
- 
+LinkedList *labels;
 //#define _6309 1
 
 #endif

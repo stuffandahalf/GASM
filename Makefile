@@ -5,8 +5,11 @@ LEXFLAGS=
 YACC=yacc
 YACCFLAGS=-d #--debug --verbose
 
-as-6x09: main.c lex.yy.c y.tab.c y.tab.h elf.c elf.h
-	$(CC) -o $@ main.c lex.yy.c y.tab.c elf.c
+%.o: %.c %.h
+	$(CC) -c $<
+
+as-6x09: main.c lex.yy.c y.tab.c y.tab.h elf.o linkedlist.o label.o
+	$(CC) -o $@ main.c lex.yy.c y.tab.c elf.o linkedlist.o label.o
 
 lex.yy.c: as_lex.l
 	$(LEX) $(LEXFLAGS) $<
@@ -34,3 +37,4 @@ clean:
 	rm -f as-6x09
 	rm -f a.out
 	rm -f y.output
+	rm *.o
