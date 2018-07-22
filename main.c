@@ -23,11 +23,12 @@ int main(int argc, char **argv) {
 
     struct option longopts[] = {
         {"arch", required_argument, NULL, 'm'},
+        {"format", required_argument, NULL, 'f'}
         {0, 0, 0, 0}
     };
 
     int c;
-    while ((c = getopt_long(argc, argv, "m:o:", longopts, NULL)) != -1) {
+    while ((c = getopt_long(argc, argv, "m:o:f:", longopts, NULL)) != -1) {
         switch (c) {
         case 'm':
             if (supported_arch(optarg)) {
@@ -42,6 +43,9 @@ int main(int argc, char **argv) {
             out_fname = optarg;
             printf("%s\n", out_fname);
             extern FILE *yyin;
+            breal;
+        case 'f':
+            format = optarg;
         case 0:
             break;
         }
@@ -55,6 +59,7 @@ int main(int argc, char **argv) {
 
     printf("Chosen architecture is: %s\n", arch);
     printf("Output file is: %s\n", out_fname);
+    printf("Output format is: %s\n", format);
 
     out_file = fopen(out_fname, "wb");
 
