@@ -32,8 +32,6 @@ int main(int argc, char **argv) {
         case 'm':
             if (supported_arch(optarg)) {
                 arch = optarg;
-                //yy_push_state(find_state(arch));
-                //BEGIN(find_state(arch));
             }
             else {
                 fprintf(stderr, "Unsupported architecture \"%s\"\n", optarg);
@@ -50,7 +48,6 @@ int main(int argc, char **argv) {
     }
 
     while (optind < argc) {
-//        printf("%s\n", argv[optind++]);
         extern FILE *yyin;
         yyin = fopen(argv[optind++], "r");
     }
