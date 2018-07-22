@@ -1,13 +1,14 @@
 #include "linkedlist.h"
 
-struct node_t *newNode(void *data)
+struct node_t *new_node(void *data)
 {
     struct node_t *nodePtr = (struct node_t *)calloc(sizeof(struct node_t), 1);
+    //struct node_t *nodePtr = (struct node_t *)malloc(sizeof(struct node_t));
     nodePtr->data = data;
     return nodePtr;
 }
 
-LinkedList *newLinkedList()
+LinkedList *new_LinkedList()
 {
     LinkedList *ll = (LinkedList *)malloc(sizeof(LinkedList));
     ll->size = 0;
@@ -16,17 +17,17 @@ LinkedList *newLinkedList()
 
 void llappend(LinkedList *ll, void *data)
 {
-    struct node_t *newNodePtr = newNode(data);
+    struct node_t *new_node_ptr = new_node(data);
     if(ll->size == 0)
     {
-        ll->head = newNodePtr;
+        ll->head = new_node_ptr;
     }
     else
     {
-        newNodePtr->prev = ll->tail;
-        ll->tail->next = newNodePtr;
+        new_node_ptr->prev = ll->tail;
+        ll->tail->next = new_node_ptr;
     }
-    ll->tail = newNodePtr;
+    ll->tail = new_node_ptr;
     ll->size++;
 }
 

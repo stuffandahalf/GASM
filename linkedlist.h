@@ -16,7 +16,7 @@ typedef struct linkedlist_t {
     int size;
 } LinkedList;
 
-struct node_t *newNode(void *data);
+struct node_t *new_node(void *data);
 
 LinkedList *newLinkedList();
 void *llat(LinkedList *ll, int index);

@@ -19,7 +19,7 @@ void freeLabels(LinkedList *labels);
 int main(int argc, char **argv) {
     arch = "6809";
     out_fname = "a.out";
-    labels = newLinkedList();
+    labels = new_LinkedList();
 
     struct option longopts[] = {
         {"arch", required_argument, NULL, 'm'},
@@ -83,4 +83,5 @@ void freeLabels(LinkedList *labels) {
     for (size_t i = 0; i < labels->size; i++) {
         freeLabel(llpop(labels));
     }
+    free(labels);
 }
