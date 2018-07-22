@@ -18,7 +18,7 @@ typedef struct linkedlist_t {
 
 struct node_t *new_node(void *data);
 
-LinkedList *newLinkedList();
+LinkedList *new_LinkedList();
 void *llat(LinkedList *ll, int index);
 void llappend(LinkedList *ll, void *data);
 void printLinkedList(LinkedList *ll);
