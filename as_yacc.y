@@ -71,6 +71,8 @@
 %token TST
 
 
+%token EQU
+%token FDB
 %token RMB
 
 %start program
@@ -126,7 +128,7 @@ statement : label
       | relative_label
       ;*/
 
-label : IDENTIFIER COLON 
+label : IDENTIFIER COLON
       {
           //$<svalue>$ = $<svalue>1;
           //printf("%s\n", $<svalue>1);
@@ -152,6 +154,10 @@ direct : DECNUM
 
 indexed : OPENBRACKET DECNUM CLOSEBRACKET
         | OPENBRACKET HEXNUM CLOSEBRACKET
+        | OPENBRACKET IDENTIFIER CLOSEBRACKET
+        {
+
+        }
         ;
 
 extended : DECNUM
@@ -432,14 +438,25 @@ instruction_band : BAND direct
                  }
                  ;
 
-instruction_bcc : BCC immediate
+instruction_bcc : BCC IDENTIFIER
+                | BCC DECNUM
+                | BCC HEXNUM
                 {
                     uint8_t opcode[] = { 0x24 };
                     write_bytes(opcode, sizeof(opcode));
 
-                    uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                    write_bytes(imm_value, sizeof(imm_value));
+                    //uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
+                    //write_bytes(imm_value, sizeof(imm_value));
+                    int address_diff = $<ivalue>2 - address + 1;
+                    if (address_diff > INT8_MAX || address_diff < INT8_MIN) {
+                        fprintf(stderr, "Address out of range of BCC");
+                        yyerror();
+                    }
+                    uint8_t diff[] = { (uint8_t)address_diff };
+                    write_bytes(imm_value);
+
                 }
+                ;
 
 /* COMPLETE */
 

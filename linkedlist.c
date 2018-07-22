@@ -2,24 +2,16 @@
 
 struct node_t *newNode(void *data)
 {
-    struct node_t *nodePtr = (struct node_t*)malloc(sizeof(struct node_t));
+    struct node_t *nodePtr = (struct node_t *)calloc(sizeof(struct node_t), 1);
     nodePtr->data = data;
     return nodePtr;
 }
 
 LinkedList *newLinkedList()
 {
-    LinkedList *ll = (LinkedList*)malloc(sizeof(LinkedList));
+    LinkedList *ll = (LinkedList *)malloc(sizeof(LinkedList));
     ll->size = 0;
     return ll;
-}
-
-void deleteLinkedList(LinkedList *ll)
-{
-    for (size_t i = 0; i < ll->size; i++) {
-        free(llpop(ll));
-    }
-    free(ll);
 }
 
 void llappend(LinkedList *ll, void *data)

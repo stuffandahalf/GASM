@@ -5,11 +5,13 @@ LEXFLAGS=
 YACC=yacc
 YACCFLAGS=-d #--debug --verbose
 
+OBJS = elf.o linkedlist.o label.o
+
 %.o: %.c %.h
 	$(CC) -c $<
 
-as-6x09: main.c lex.yy.c y.tab.c y.tab.h elf.o linkedlist.o label.o
-	$(CC) -o $@ main.c lex.yy.c y.tab.c elf.o linkedlist.o label.o
+as-6x09: main.c lex.yy.c y.tab.c y.tab.h $(OBJS)
+	$(CC) -o $@ main.c lex.yy.c y.tab.c $(OBJS)
 
 lex.yy.c: as_lex.l
 	$(LEX) $(LEXFLAGS) $<
@@ -23,7 +25,7 @@ run: as-6x09
 
 .PHONY: debug
 debug: as-6x09
-	valgrind ./$<
+	valgrind --leak-check=full --track-origins=yes ./$<
 
 .PHONY: dump
 dump: as-6x09
@@ -37,4 +39,4 @@ clean:
 	rm -f as-6x09
 	rm -f a.out
 	rm -f y.output
-	rm *.o
+	rm -f *.o

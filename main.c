@@ -13,12 +13,8 @@ char *architectures[] = {
     "6309"
 };
 
-/* Architecture states */
-#define _6809 0
-#define _6309 1
-
 bool supported_arch(const char *string);
-int find_state(char *arch);
+void freeLabels(LinkedList *labels);
 
 int main(int argc, char **argv) {
     arch = "6809";
@@ -63,19 +59,17 @@ int main(int argc, char **argv) {
     printf("Chosen architecture is: %s\n", arch);
     printf("Output file is: %s\n", out_fname);
 
-    /*if (!strcmp("6309", arch)) {
-        BEGIN(_6309);
-    }*/
     out_file = fopen(out_fname, "wb");
 
     //yylex();
     yyparse();
-    
+
     for (size_t i = 0; i < labels->size; i++) {
         label_t *l = /*(label_t *)*/llat(labels, i);
         printf("%s\t%d\n", l->id, l->address);
     }
-    deleteLinkedList(labels);
+    freeLabels(labels);
+    labels = NULL;
     return 0;
 }
 
@@ -88,14 +82,8 @@ bool supported_arch(const char *string) {
     return false;
 }
 
-int find_state(char *arch) {
-    if (!strcmp("6809", arch)) {
-        return _6809;
-    }
-    else if (!strcmp("6309", arch)) {
-        return _6309;
-    }
-    else {
-        return -1;
+void freeLabels(LinkedList *labels) {
+    for (size_t i = 0; i < labels->size; i++) {
+        freeLabel(llpop(labels));
     }
 }

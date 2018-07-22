@@ -8,5 +8,6 @@ label_t *newLabel(char *id, uint16_t address) {
 }
 
 void freeLabel(label_t *l) {
+    free(l->id);
     free(l);
 }

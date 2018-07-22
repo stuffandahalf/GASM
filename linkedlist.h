@@ -19,7 +19,6 @@ typedef struct linkedlist_t {
 struct node_t *newNode(void *data);
 
 LinkedList *newLinkedList();
-void deleteLinkedList(LinkedList *ll);
 void *llat(LinkedList *ll, int index);
 void llappend(LinkedList *ll, void *data);
 void printLinkedList(LinkedList *ll);
