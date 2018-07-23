@@ -111,6 +111,9 @@ typedef struct {
     Elf32_Word  sh_entsize;
 } ELF32_Shdr;
 
+ELF32_Shdr *new_ELF32_Shdr();
+void write_ELF32_Shdr(ELFF32_Shdr *s_hdr, FILE *out_file);
+
 typedef struct {
     uint32_t p_type;
     uint32_t p_offset;

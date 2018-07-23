@@ -49,6 +49,16 @@ void write_ELF32_Ehdr(ELF32_Ehdr *hdr, FILE *out_file) {
     }*/
 }
 
+ELF32_Shdr *new_ELF32_Shdr() {
+    ELF32_Shdr *s_hdr = malloc(sizeof(ELF32_Shdr));
+
+    return s_hdr;
+}
+
+void write_ELF32_Shdr(ELFF32_Shdr *s_hdr, FILE *out_file) {
+    
+}
+
 ELF32_Phdr *new_ELF32_Phdr() {
     ELF32_Phdr *p_hdr = malloc(sizeof(ELF32_Phdr));
 
