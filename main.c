@@ -3,6 +3,7 @@
 #include <string.h>
 #include <getopt.h>
 #include "as.h"
+#include "elf.h"
 #include "y.tab.h"
 
 extern int yy_push_state(int new_state);
@@ -23,7 +24,7 @@ int main(int argc, char **argv) {
 
     struct option longopts[] = {
         {"arch", required_argument, NULL, 'm'},
-        {"format", required_argument, NULL, 'f'}
+        {"format", required_argument, NULL, 'f'},
         {0, 0, 0, 0}
     };
 
@@ -43,9 +44,10 @@ int main(int argc, char **argv) {
             out_fname = optarg;
             printf("%s\n", out_fname);
             extern FILE *yyin;
-            breal;
+            break;
         case 'f':
             format = optarg;
+            break;
         case 0:
             break;
         }
@@ -65,6 +67,16 @@ int main(int argc, char **argv) {
 
     //uint8_t elf[] = { 0x7F, 0x45, 0x4C, 0x46 };
     //fwrite(elf, sizeof(uint8_t), sizeof(elf), out_file);
+
+    uint16_t e_machine = EM_NONE;
+    if (!strcmp("6809", arch)) {
+        e_machine = EM_6809;
+    }
+    else if (!strcmp("6309", arch)) {
+        e_machine = EM_6309;
+    }
+
+    write_elf32_header(new_ELF32_Header(e_machine), out_file);
 
     //yylex();
     yyparse();
