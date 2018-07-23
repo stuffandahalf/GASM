@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
         e_machine = EM_6309;
     }
 
-    write_elf32_header(new_ELF32_Header(e_machine), out_file);
+    write_ELF32_Ehdr(new_ELF32_Ehdr(e_machine), out_file);
 
     //yylex();
     yyparse();

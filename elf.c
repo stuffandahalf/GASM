@@ -1,7 +1,7 @@
 #include "elf.h"
 
-ELF32_Header *new_ELF32_Header(uint16_t e_machine) {
-    ELF32_Header *hdr = malloc(sizeof(ELF32_Header));
+ELF32_Ehdr *new_ELF32_Ehdr(uint16_t e_machine) {
+    ELF32_Ehdr *hdr = malloc(sizeof(ELF32_Ehdr));
 
     hdr->e_ident[EI_MAG0] = 0x7F;
     hdr->e_ident[EI_MAG1] = 'E';
@@ -12,7 +12,7 @@ ELF32_Header *new_ELF32_Header(uint16_t e_machine) {
 
     hdr->e_ident[EI_DATA] = ELFDATA_BE;
     hdr->e_ident[EI_VERSION] = 1;
-    hdr->e_ident[EI_OSABI] = ABI_SYSTEMV;
+    hdr->e_ident[EI_OSABI] = ELFOSABI_SYSTEMV;
 
     //hdr->e_ident[EI_ABIVERSION] = 1;      // Unused for System V
     hdr->e_type = ET_REL;
@@ -20,45 +20,20 @@ ELF32_Header *new_ELF32_Header(uint16_t e_machine) {
     hdr->e_version = 1;
     hdr->e_entry = 0;
     hdr->e_phoff = 0x34;
-
-    hdr->e_ehsize = 52;
+    hdr->e_shoff = 0;
+    hdr->e_flags = 0;
+    hdr->e_ehsize = sizeof(*hdr);
+    hdr->e_phentsize = 0;
+    hdr->e_phnum = 0;
+    hdr->e_shentsize = 0;
+    hdr->e_shnum = 0;
+    hdr->e_shstrndx = 0;
 
     return hdr;
 }
 
-void write_elf32_header(ELF32_Header *hdr, FILE *out_file) {
-    /* Write identification */
-    fwrite(hdr->e_ident, sizeof(uint8_t), ELF_NIDENT, out_file);
-
-    ///* Write file type */
-    //for (int i = sizeof(hdr->e_type) - 1; i >= 0; i--) {
-        //uint8_t byte = (hdr->e_type >> (8 * i)) & 0xFF;
-        //fwrite(&byte, sizeof(uint8_t), 1, out_file);
-    //}
-
-    ///* Write machine ISA */
-    //for (int i = sizeof(hdr->e_machine) - 1; i >= 0; i--) {
-        //uint8_t byte = (hdr->e_machine >> (8 * i)) & 0xFF;
-        //fwrite(&byte, sizeof(uint8_t), 1, out_file);
-    //}
-
-    ///* Write ELF Version */
-    //for (int i = sizeof(hdr->e_version) - 1; i >= 0; i--) {
-        //uint8_t byte = (hdr->e_version >> (8 * i)) & 0xFF;
-        //fwrite(&byte, sizeof(uint8_t), 1, out_file);
-    //}
-
-    ///* Write entry point */
-    //for (int i = sizeof(hdr->e_entry) - 1; i >= 0; i--) {
-        //uint8_t byte = (hdr->e_entry >> (8 * i)) & 0xFF;
-        //fwrite(&byte, sizeof(uint8_t), 1, out_file);
-    //}
-
-    ///* Write program header offset */
-    //for (int i = sizeof(hdr->phoff) - 1; i >= 0; i--) {
-        //uint8_t byte = (hdr->phoff >> (8 * i)) & 0xFF;
-        //fwrite(&byte, sizeof(uint8_t), 1, out_file);
-    //}
+void write_ELF32_Ehdr(ELF32_Ehdr *hdr, FILE *out_file) {
+    fwrite(hdr->e_ident, sizeof(uint8_t), EI_NIDENT, out_file);
 
     write_bytes(hdr->e_type, out_file);
     write_bytes(hdr->e_machine, out_file);
@@ -72,4 +47,14 @@ void write_elf32_header(ELF32_Header *hdr, FILE *out_file) {
         uint8_t byte = *(hdr_bytes + sizeof(uint8_t) * i);
         fwrite(&byte, sizeof(uint8_t), 1, out_file);
     }*/
+}
+
+ELF32_Phdr *new_ELF32_Phdr() {
+    ELF32_Phdr *p_hdr = malloc(sizeof(ELF32_Phdr));
+
+    return p_hdr;
+}
+
+void write_ELF32_Phdr(ELF32_Phdr *p_hdr, FILE *out_file) {
+
 }
