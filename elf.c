@@ -13,19 +13,20 @@ ELF32_Ehdr *new_ELF32_Ehdr(uint16_t e_machine) {
     hdr->e_ident[EI_DATA] = ELFDATA_BE;
     hdr->e_ident[EI_VERSION] = 1;
     hdr->e_ident[EI_OSABI] = ELFOSABI_SYSTEMV;
-
-    //hdr->e_ident[EI_ABIVERSION] = 1;      // Unused for System V
+    //hdr->e_ident[EI_ABIVERSION] = 0;      // Unused for System V
+    
     hdr->e_type = ET_REL;
     hdr->e_machine = e_machine;
     hdr->e_version = 1;
     hdr->e_entry = 0;
-    hdr->e_phoff = 0x34;
+    //hdr->e_phoff = 0x34;
+    hdr->e_phoff = 0;
     hdr->e_shoff = 0;
     hdr->e_flags = 0;
-    hdr->e_ehsize = sizeof(*hdr);
+    hdr->e_ehsize = sizeof(ELF32_Ehdr);
     hdr->e_phentsize = 0;
     hdr->e_phnum = 0;
-    hdr->e_shentsize = 0;
+    hdr->e_shentsize = sizeof(ELF32_Shdr);
     hdr->e_shnum = 0;
     hdr->e_shstrndx = 0;
 
@@ -55,7 +56,7 @@ ELF32_Shdr *new_ELF32_Shdr() {
     return s_hdr;
 }
 
-void write_ELF32_Shdr(ELFF32_Shdr *s_hdr, FILE *out_file) {
+void write_ELF32_Shdr(ELF32_Shdr *s_hdr, FILE *out_file) {
     
 }
 
