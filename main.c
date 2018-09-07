@@ -9,7 +9,7 @@
 extern int yy_push_state(int new_state);
 
 #define ARCH_NUM 2
-char *architectures[] = {
+const char *architectures[] = {
     "6809",
     "6309"
 };
@@ -18,9 +18,9 @@ bool supported_arch(const char *string);
 void freeLabels(LinkedList *labels);
 
 int main(int argc, char **argv) {
-    arch = "6809";
-    out_fname = "a.out";
-    labels = new_LinkedList();
+    char *arch = "6809";
+    char *out_fname = "a.out";
+    struct label *label_head = NULL;
 
     struct option longopts[] = {
         {"arch", required_argument, NULL, 'm'},
@@ -76,7 +76,13 @@ int main(int argc, char **argv) {
         e_machine = EM_6309;
     }
 
-    write_ELF32_Ehdr(new_ELF32_Ehdr(e_machine), out_file);
+    ELF32_Ehdr *elf_header = new_ELF32_Ehdr(e_machine);
+    ELF32_Shdr *shstrtab = new_ELF32_Shdr();
+
+    shstrtab->name = 1;
+    shstrtab->sh_type = SHT_SYMTAB;
+    shstrtab->
+
 
     //yylex();
     yyparse();

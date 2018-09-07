@@ -39,6 +39,9 @@ typedef struct {
     Elf32_Half      e_shstrndx;
 } ELF32_Ehdr;
 
+ELF32_Ehdr *new_ELF32_Ehdr(uint16_t e_machine);
+void write_ELF32_Ehdr(ELF32_Ehdr *hdr, FILE *out_file);
+
 /* e_ident indeces */
 #define EI_MAG0         0
 #define EI_MAG1         1
@@ -95,9 +98,6 @@ typedef struct {
 
 #include "elf_machines.h"
 
-ELF32_Ehdr *new_ELF32_Ehdr(uint16_t e_machine);
-void write_ELF32_Ehdr(ELF32_Ehdr *hdr, FILE *out_file);
-
 typedef struct {
     Elf32_Word  sh_name;
     Elf32_Word  sh_type;
@@ -126,5 +126,29 @@ typedef struct {
 
 ELF32_Phdr *new_ELF32_Phdr();
 void write_ELF32_Phdr(ELF32_Phdr *p_hdr, FILE *out_file);
+
+#define SHT_NULL            0
+#define SHT_PROGBITS        1
+#define SHT_SYMTAB          2
+#define SHT_STRTAB          3
+#define SHT_RELA            4
+#define SHT_HASH            5
+#define SHT_DYNAMIC         6
+#define SHT_NOTE            7
+#define SHT_NOBITS          8
+#define SHT_RELA            9
+#define SHT_SHLIB           10
+#define SHT_DYNSYM          11
+#define SHT_INIT_ARRAY      14
+#define SHT_FINI_ARRAY      15
+#define SHT_PREINIT_ARRAY   16
+#define SHT_GROUP           17
+#define SHT_SYMTAB_SHNDX    18
+#define SHT_LOOS            0x60000000
+#define SHT_HIOS            0x6FFFFFFF
+#define SHT_LOPROC          0x70000000
+#define SHT_HIPROC          0x7FFFFFFF
+#define SHT_LOUSER          0x80000000
+#define SHT_HIUSER          0x8FFFFFFF
 
 #endif
