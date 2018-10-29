@@ -1,4 +1,4 @@
-%token DECNUM HEXNUM IDENTIFIER
+%token DECNUM HEXNUM IDENTIFIER LABEL
 %token OPENBRACKET CLOSEBRACKET
 %token POUND COLON PERCENT PERIOD COMMA
 
@@ -85,32 +85,25 @@
 %{
 #include <stdio.h>
 #include <string.h>
-#include "as.h"
-#include "linkedlist.h"
-#include "label.h"
+#include <stdint.h>
 
 extern int line_num;
-extern LinkedList *labels;
 extern YYSTYPE yylval;
 extern int yylex();
 
 //extern FILE *out_file;
 
 uint16_t address = 0;
-int yydebug = 0;
+int yydebug = 1;
 
 void yyerror(const char *str) {
     fprintf(stderr, "error: %s on line number %d\n", str, line_num);
-    remove(out_fname);
+    //remove(out_fname);
 }
 
-//void emit(Instruction inst);
+//void write_bytes(uint8_t *bytes, size_t num);
 
-//#define emit(instruction) fwrite(instruction, sizeof(instruction), 1, out_file)
-
-void write_bytes(uint8_t *bytes, size_t num);
-
-label_t *find_label(char *id);
+//label_t *find_label(char *id);
 
 %}
 
@@ -119,7 +112,7 @@ program : program statement
         | statement
         ;
 
-statement : label
+statement : LABEL
           | instruction { /*emit($1);*/ }
           |
           ;
@@ -128,21 +121,24 @@ statement : label
       | relative_label
       ;*/
 
-label : IDENTIFIER COLON
-      {
+//label : IDENTIFIER COLON
+      //{
+          //puts("label");
+          ////$<svalue>$ = strdup($<svalue>1);
+          //printf("%s\n", $<svalue>$);
           //$<svalue>$ = $<svalue>1;
-          //printf("%s\n", $<svalue>1);
-          for (char *c = $<svalue>1; *c != '\0'; c++) {
-              if (*c == ':') {
-                  *c = '\0';
-                  break;
-              }
-          }
-          llappend(labels, newLabel(strdup($<svalue>1), address));
-          //resolve_reference();
-      }
-      /*| PERIOD IDENTIFIER COLON {$<svalue>$ = $<svalue>2; printf("%s\n", $<svalue>2; }*/
-      ;
+          //printf("%s\t%s\n", $<svalue>1, $<svalue>2);
+          ///*for (char *c = $<svalue>1; *c != '\0'; c++) {
+              //if (*c == ':') {
+                  //*c = '\0';
+                  //break;
+              //}
+          //}*/
+          ////llappend(labels, newLabel(strdup($<svalue>1), address));
+          ////resolve_reference();
+      //}
+      ///*| PERIOD IDENTIFIER COLON {$<svalue>$ = $<svalue>2; printf("%s\n", $<svalue>2; }*/
+      //;
 
 immediate : POUND DECNUM { $<ivalue>$ = yylval.ivalue; }
           | POUND HEXNUM { $<ivalue>$ = yylval.ivalue; }
@@ -209,7 +205,7 @@ instruction_abx : ABX
                 {
                     //printf("ABX: %X\n", 0x3A);
                     uint8_t opcode[] = { 0x3A };
-                    write_bytes(opcode, sizeof(opcode));
+                    //write_bytes(opcode, sizeof(opcode));
                 }
                 ;
 
@@ -217,110 +213,110 @@ instruction_adca : ADCA immediate
                  {
                      printf("ADCA %X\n", $<ivalue>2);
                      uint8_t opcode[] = { 0x89, $<ivalue>2 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     write_bytes(opcode, sizeof(imm_value));
+                     //write_bytes(opcode, sizeof(imm_value));
                  }
                  ;
 
 instruction_adcb : ADCB immediate
                  {
                      uint8_t opcode[] = { 0xC9 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_adcd : ADCD immediate
                  {
                      uint8_t opcode[] = { 0x10, 0x89 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF, $<ivalue>2 >> 8 };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_adcr : ADCR immediate
                  {
                      uint8_t opcode[] = { 0x10, 0x31 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_adda : ADDA immediate
                  {
                      uint8_t opcode[] = { 0x8B };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_addb : ADDB immediate
                  {
                      uint8_t opcode[] = { 0xCB };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_adde : ADDE immediate
                  {
                      uint8_t opcode[] = { 0x11, 0x8B };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_addf : ADDF immediate
                  {
                      uint8_t opcode[] = { 0x11, 0xCB };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_addd : ADDD immediate
                  {
                      uint8_t opcode[] = { 0xC3 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF, $<ivalue>2 >> 8 };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_addw : ADDW immediate
                  {
                      uint8_t opcode[] = { 0x10, 0x8B };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF, $<ivalue>2 >> 8 };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_addr : ADDR immediate
                  {
                      uint8_t opcode[] = { 0x10, 0x30 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
@@ -332,64 +328,64 @@ instruction_addr : ADDR immediate
 instruction_anda : ANDA immediate
                  {
                      uint8_t opcode[] = { 0x84 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_andb : ANDB immediate
                  {
                      uint8_t opcode[] = { 0xC4 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_andcc : ANDCC immediate
                   {
                       uint8_t opcode[] = { 0x1C };
-                      write_bytes(opcode, sizeof(opcode));
+                      //write_bytes(opcode, sizeof(opcode));
 
                       uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                      write_bytes(imm_value, sizeof(imm_value));
+                      //write_bytes(imm_value, sizeof(imm_value));
                   }
                   ;
 
 instruction_andd : ANDD immediate
                  {
                      uint8_t opcode[] = { 0x10, 0x84 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF, $<ivalue>2 >> 8 };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_andr : ANDR immediate
                  {
                      uint8_t opcode[] = { 0x10, 0x34 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     write_bytes(imm_value, sizeof(imm_value));
+                     //write_bytes(imm_value, sizeof(imm_value));
                  }
                  ;
 
 instruction_asla : ASLA
                  {
                      uint8_t opcode[] = { 0x48 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
 instruction_aslb : ASLB
                  {
                      uint8_t opcode[] = { 0x58 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
@@ -401,21 +397,21 @@ instruction_aslb : ASLB
 instruction_asld : ASLD
                  {
                      uint8_t opcode[] = { 0x10, 0x48 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
 instruction_asra : ASRA
                  {
                      uint8_t opcode[] = { 0x47 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
 instruction_asrb : ASRB
                  {
                      uint8_t opcode[] = { 0x57 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
@@ -427,14 +423,14 @@ instruction_asrb : ASRB
 instruction_asrd : ASRD
                  {
                      uint8_t opcode[] = { 0x10, 0x47 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
 instruction_band : BAND direct
                  {
                      uint8_t opcode[] = { 0x11, 0x30 };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
@@ -443,17 +439,17 @@ instruction_bcc : BCC IDENTIFIER
                 | BCC HEXNUM
                 {
                     uint8_t opcode[] = { 0x24 };
-                    write_bytes(opcode, sizeof(opcode));
+                    //write_bytes(opcode, sizeof(opcode));
 
                     //uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                    //write_bytes(imm_value, sizeof(imm_value));
+                    ////write_bytes(imm_value, sizeof(imm_value));
                     int address_diff = $<ivalue>2 - address + 1;
                     if (address_diff > INT8_MAX || address_diff < INT8_MIN) {
                         fprintf(stderr, "Address out of range of BCC");
                         yyerror();
                     }
                     uint8_t diff[] = { (uint8_t)address_diff };
-                    write_bytes(imm_value);
+                    //write_bytes(imm_value);
 
                 }
                 ;
@@ -463,42 +459,42 @@ instruction_bcc : BCC IDENTIFIER
 instruction_inca : INCA
                  {
                      uint8_t opcode[] = { 0x4C };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
 instruction_incb : INCB
                  {
                      uint8_t opcode[] = { 0x5C };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
 instruction_incd : INCD
                  {
                      uint8_t opcode[] = { 0x10, 0x4C };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
 instruction_ince : INCE
                  {
                      uint8_t opcode[] = { 0x11, 0x4C };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
 instruction_incf : INCF
                  {
                      uint8_t opcode[] = { 0x11, 0x5C };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
 instruction_incw : INCW
                  {
                      uint8_t opcode[] = { 0x10, 0x5C };
-                     write_bytes(opcode, sizeof(opcode));
+                     //write_bytes(opcode, sizeof(opcode));
                  }
                  ;
 
@@ -506,10 +502,10 @@ instruction_lda : LDA immediate
                 {
                     //printf("%d\n", $<ivalue>2);
                     uint8_t opcode[] = { 0x86 };
-                    write_bytes(opcode, sizeof(opcode));
+                    //write_bytes(opcode, sizeof(opcode));
 
                     uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                    write_bytes(imm_value, sizeof(imm_value));
+                    //write_bytes(imm_value, sizeof(imm_value));
                 }
                 /*| LDA direct
                 | LDA indexed
@@ -519,30 +515,30 @@ instruction_lda : LDA immediate
 instruction_ldb : LDB immediate
                 {
                     uint8_t opcode[] = { 0xC6 };
-                    write_bytes(opcode, sizeof(opcode));
+                    //write_bytes(opcode, sizeof(opcode));
 
                     uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                    write_bytes(imm_value, sizeof(imm_value));
+                    //write_bytes(imm_value, sizeof(imm_value));
                 }
                 ;
 
 instruction_lde : LDE immediate
                 {
                     uint8_t opcode[] = { 0x11, 0x86 };
-                    write_bytes(opcode, sizeof(opcode));
+                    //write_bytes(opcode, sizeof(opcode));
 
                     uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                    write_bytes(imm_value, sizeof(imm_value));
+                    //write_bytes(imm_value, sizeof(imm_value));
                 }
                 ;
 
 instruction_ldf : LDF immediate
                 {
                     uint8_t opcode[] = { 0x11, 0xC6 };
-                    write_bytes(opcode, sizeof(opcode));
+                    //write_bytes(opcode, sizeof(opcode));
 
                     uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                    write_bytes(imm_value, sizeof(imm_value));
+                    //write_bytes(imm_value, sizeof(imm_value));
                 }
                 ;
 
@@ -552,14 +548,14 @@ instruction_ldf : LDF immediate
                 ;*/
 %%
 
-void write_bytes(uint8_t *bytes, size_t num){
+/*void write_bytes(uint8_t *bytes, size_t num){
     extern FILE *out_file;
 
     fwrite(bytes, num, sizeof(uint8_t), out_file);
     address += num;
-}
+}*/
 
-label_t *find_label(char *id) {
+/*label_t *find_label(char *id) {
     for (int i = 0; i < labels->size; i++) {
         label_t *label = llat(labels, i);
         if (!strcmp(id, label->id)) {
@@ -567,4 +563,4 @@ label_t *find_label(char *id) {
         }
     }
     return NULL;
-}
+}*/

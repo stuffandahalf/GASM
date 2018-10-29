@@ -5,7 +5,8 @@ LEXFLAGS=
 YACC=yacc
 YACCFLAGS=-d #--debug --verbose
 
-OBJS = elf.o linkedlist.o label.o
+#OBJS = elf.o linkedlist.o label.o
+OBJS = 
 
 %.o: %.c %.h
 	$(CC) -c $<

@@ -1,12 +1,19 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <string.h>
 #include <getopt.h>
-#include "as.h"
-#include "elf.h"
+#include "linkedlist.h"
+//#include "as.h"
+//#include "elf.h"
 #include "y.tab.h"
 
-extern int yy_push_state(int new_state);
+
+char *arch;
+char *out_fname;
+char *format;
+FILE *out_file;
+
 
 #define ARCH_NUM 2
 const char *architectures[] = {
@@ -15,7 +22,7 @@ const char *architectures[] = {
 };
 
 bool supported_arch(const char *string);
-void freeLabels(LinkedList *labels);
+//void free_labels(LinkedList *labels);
 
 int main(int argc, char **argv) {
     char *arch = "6809";
@@ -63,12 +70,12 @@ int main(int argc, char **argv) {
     printf("Output file is: %s\n", out_fname);
     printf("Output format is: %s\n", format);
 
-    out_file = fopen(out_fname, "wb");
+    //out_file = fopen(out_fname, "wb");
 
     //uint8_t elf[] = { 0x7F, 0x45, 0x4C, 0x46 };
     //fwrite(elf, sizeof(uint8_t), sizeof(elf), out_file);
 
-    uint16_t e_machine = EM_NONE;
+    /*uint16_t e_machine = EM_NONE;
     if (!strcmp("6809", arch)) {
         e_machine = EM_6809;
     }
@@ -81,18 +88,18 @@ int main(int argc, char **argv) {
 
     shstrtab->name = 1;
     shstrtab->sh_type = SHT_SYMTAB;
-    shstrtab->
+    shstrtab->*/
 
 
     //yylex();
     yyparse();
 
-    for (size_t i = 0; i < labels->size; i++) {
-        label_t *l = /*(label_t *)*/llat(labels, i);
-        printf("%s\t%d\n", l->id, l->address);
-    }
-    freeLabels(labels);
-    labels = NULL;
+    //for (size_t i = 0; i < labels->size; i++) {
+        //label_t *l = /*(label_t *)*/llat(labels, i);
+        //printf("%s\t%d\n", l->id, l->address);
+    //}
+    //free_labels(labels);
+    //labels = NULL;
     return 0;
 }
 
@@ -105,9 +112,9 @@ bool supported_arch(const char *string) {
     return false;
 }
 
-void freeLabels(LinkedList *labels) {
+/*void free_labels(LinkedList *labels) {
     for (size_t i = 0; i < labels->size; i++) {
         freeLabel(llpop(labels));
     }
     free(labels);
-}
+}*/

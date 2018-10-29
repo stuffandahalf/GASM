@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "y.tab.h"
 
 #define dprint(str) { \
@@ -12,6 +13,8 @@
 extern int yydebug;
 extern char *arch;
 extern YYSTYPE yylval;
+
+#define arch_instruction(selected_arch, instruction) if (!strcmp(arch, ((char *)selected_arch))) return instruction
 
 int line_num = 1;
 
@@ -43,54 +46,54 @@ int yywrap() {
 
 "ADCA"              { dprint("ADCA"); return ADCA; }
 "ADCB"              { dprint("ADCB"); return ADCB; }
-"ADCD"              { dprint("ADCD"); if (!strcmp(arch, "6309")) return ADCD; }
-"ADCR"              { dprint("ADCR"); if (!strcmp(arch, "6309")) return ADCR; }
+"ADCD"              { dprint("ADCD"); arch_instruction("6309", ADCD); }
+"ADCR"              { dprint("ADCR"); arch_instruction("6309", ADCR); }
 
 "ADDA"              { dprint("ADDA"); return ADDA; }
 "ADDB"              { dprint("ADDB"); return ADDB; }
-"ADDE"              { dprint("ADDE"); if (!strcmp(arch, "6309")) return ADDE; }
-"ADDF"              { dprint("ADDF"); if (!strcmp(arch, "6309")) return ADDF; }
+"ADDE"              { dprint("ADDE"); arch_instruction("6309", ADDE); }
+"ADDF"              { dprint("ADDF"); arch_instruction("6309", ADDF); }
 "ADDD"              { dprint("ADDD"); return ADDD; }
-"ADDW"              { dprint("ADDW"); if (!strcmp(arch, "6309")) return ADDW; }
-"ADDR"              { dprint("ADDR"); if (!strcmp(arch, "6309")) return ADDR; }
+"ADDW"              { dprint("ADDW"); arch_instruction("6309", ADDW); }
+"ADDR"              { dprint("ADDR"); arch_instruction("6309", ADDR); }
 
 "AIM"               { dprint("AIM"); return AIM; }
 
 "ANDA"              { dprint("ANDA"); return ANDA; }
 "ANDB"              { dprint("ANDB"); return ANDB; }
 "ANDCC"             { dprint("ANDCC"); return ANDCC; }
-"ANDD"              { dprint("ANDD"); if (!strcmp(arch, "6309")) return ANDD; }
-"ANDR"              { dprint("ANDR"); if (!strcmp(arch, "6309")) return ANDR; }
+"ANDD"              { dprint("ANDD"); arch_instruction("6309", ANDD); }
+"ANDR"              { dprint("ANDR"); arch_instruction("6309", ANDR); }
 
 "ASLA"              { dprint("ASLA"); return ASLA; }
 "ASLB"              { dprint("ASLB"); return ASLB; }
 "ASL"               { dprint("ASL"); return ASL; }
-"ASLD"              { dprint("ASLD"); if (!strcmp(arch, "6309")) return ASLD; }
+"ASLD"              { dprint("ASLD"); arch_instruction("6309", ASLD); }
 
 "ASRA"              { dprint("ASRA"); return ASRA; }
 "ASRB"              { dprint("ASRB"); return ASRB; }
 "ASR"               { dprint("ASR"); return ASR; }
-"ASRD"              { dprint("ASRF"); if (!strcmp(arch, "6309")) return ASRD; }
+"ASRD"              { dprint("ASRF"); arch_instruction("6309", ASRD); }
 
-"BAND"              { dprint("BAND"); if (!strcmp(arch, "6309")) return BAND; }
+"BAND"              { dprint("BAND"); arch_instruction("6309", BAND); }
 
 "BCC"               { dprint("BCC"); return BCC; }
 "BCS"               { dprint("BCS"); return BCS; }
-"BEOR"              { dprint("BEOR"); if (!strcmp(arch, "6309")) return BEOR; }
+"BEOR"              { dprint("BEOR"); arch_instruction("6309", BEOR); }
 "BEQ"               { dprint("BEQ"); return BEQ; }
 "BGE"               { dprint("BGE"); return BGE; }
 "BGT"               { dprint("BGT"); return BGT; }
 "BHI"               { dprint("BHI"); return BHI; }
 "BHS"               { dprint("BHS"); return BHS; }
 
-"BIAND"             { dprint("BIAND"); if (!strcmp(arch, "6309")) return BIAND; }
-"BIEOR"             { dprint("BIEOR"); if (!strcmp(arch, "6309")) return BIEOR; }
-"BIOR"              { dprint("BIOR"); if (!strcmp(arch, "6309")) return BIOR; }
+"BIAND"             { dprint("BIAND"); arch_instruction("6309", BIAND); }
+"BIEOR"             { dprint("BIEOR"); arch_instruction("6309", BIEOR); }
+"BIOR"              { dprint("BIOR"); arch_instruction("6309", BIOR); }
 
 "BITA"              { dprint("BITA"); return BITA; }
 "BITB"              { dprint("BITB"); return BITB; }
-"BITD"              { dprint("BITD"); if (!strcmp(arch, "6309")) return BITD; }
-"BITMD"             { dprint("BITMD"); if (!strcmp(arch, "6309")) return BITMD; }
+"BITD"              { dprint("BITD"); arch_instruction("6309", BITD); }
+"BITMD"             { dprint("BITMD"); arch_instruction("6309", BITMD); }
 
 "BLE"               { dprint("BLE"); return BLE; }
 "BLO"               { dprint("BLO"); return BLO; }
@@ -99,7 +102,7 @@ int yywrap() {
 "BMI"               { dprint("BMI"); return BMI; }
 "BNE"               { dprint("BNE"); return BNE; }
 
-"BOR"               { dprint("BOR"); if (!strcmp(arch, "6309")) return BOR; }
+"BOR"               { dprint("BOR"); arch_instruction("6309", BOR); }
 
 "BPL"               { dprint("BPL"); return BPL; }
 "BRA"               { dprint("BRA"); return BRA; }
@@ -110,30 +113,30 @@ int yywrap() {
 
 "CLRA"              { dprint("CLRA"); return CLRA; }
 "CLRB"              { dprint("CLRB"); return CLRB; }
-"CLRD"              { dprint("CLRD"); if (!strcmp(arch, "6309")) return CLRD; }
-"CLRE"              { dprint("CLRE"); if (!strcmp(arch, "6309")) return CLRE; }
-"CLRF"              { dprint("CLRF"); if (!strcmp(arch, "6309")) return CLRF; }
-"CLRW"              { dprint("CLRW"); if (!strcmp(arch, "6309")) return CLRW; }
+"CLRD"              { dprint("CLRD"); arch_instruction("6309", CLRD); }
+"CLRE"              { dprint("CLRE"); arch_instruction("6309", CLRE); }
+"CLRF"              { dprint("CLRF"); arch_instruction("6309", CLRF); }
+"CLRW"              { dprint("CLRW"); arch_instruction("6309", CLRW); }
 "CLR"               { dprint("CLR"); return CLR; }
 
 "CMPA"              { dprint("CMPA"); return CMPA; }
 "CMPB"              { dprint("CMPB"); return CMPB; }
-"CMPE"              { dprint("CMPE"); if (!strcmp(arch, "6309")) return CMPE; }
-"CMPF"              { dprint("CMPF"); if (!strcmp(arch, "6309")) return CMPF; }
+"CMPE"              { dprint("CMPE"); arch_instruction("6309", CMPE); }
+"CMPF"              { dprint("CMPF"); arch_instruction("6309", CMPF); }
 "CMPD"              { dprint("CMPD"); return CMPD; }
 "CMPS"              { dprint("CMPS"); return CMPS; }
 "CMPU"              { dprint("CMPU"); return CMPU; }
-"CMPW"              { dprint("CMPW"); if (!strcmp(arch, "6309")) return CMPW; }
+"CMPW"              { dprint("CMPW"); arch_instruction("6309", CMPW); }
 "CMPX"              { dprint("CMPX"); return CMPX; }
 "CMPY"              { dprint("CMPY"); return CMPY; }
-"CMPR"              { dprint("CMPR"); if (!strcmp(arch, "6309")) return CMPR; }
+"CMPR"              { dprint("CMPR"); arch_instruction("6309", CMPR); }
 
 "COMA"              { dprint("COMA"); return COMA; }
 "COMB"              { dprint("COMB"); return COMB; }
-"COMD"              { dprint("COMD"); if (!strcmp(arch, "6309")) return COMD; }
-"COME"              { dprint("COME"); if (!strcmp(arch, "6309")) return COME; }
-"COMF"              { dprint("COMF"); if (!strcmp(arch, "6309")) return COMF; }
-"COMW"              { dprint("COMW"); if (!strcmp(arch, "6309")) return COMW; }
+"COMD"              { dprint("COMD"); arch_instruction("6309", COMD); }
+"COME"              { dprint("COME"); arch_instruction("6309", COME); }
+"COMF"              { dprint("COMF"); arch_instruction("6309", COMF); }
+"COMW"              { dprint("COMW"); arch_instruction("6309", COMW); }
 "COM"               { dprint("COM"); return COM; }
 
 "CWAI"              { dprint("CWAI"); return CWAI; }
@@ -142,30 +145,30 @@ int yywrap() {
 
 "DECA"              { dprint("DECA"); return DECA; }
 "DECB"              { dprint("DECB"); return DECB; }
-"DECD"              { dprint("DECD"); if (!strcmp(arch, "6309")) return DECD; }
-"DECE"              { dprint("DECE"); if (!strcmp(arch, "6309")) return DECE; }
-"DECF"              { dprint("DECF"); if (!strcmp(arch, "6309")) return DECF; }
-"DECW"              { dprint("DECW"); if (!strcmp(arch, "6309")) return DECW; }
+"DECD"              { dprint("DECD"); arch_instruction("6309", DECD); }
+"DECE"              { dprint("DECE"); arch_instruction("6309", DECE); }
+"DECF"              { dprint("DECF"); arch_instruction("6309", DECF); }
+"DECW"              { dprint("DECW"); arch_instruction("6309", DECW); }
 "DEC"               { dprint("DEC"); return DEC; }
 
-"DIVD"              { dprint("DIVD"); if (!strcmp(arch, "6309")) return DIVD; }
-"DIVQ"              { dprint("DIVQ"); if (!strcmp(arch, "6309")) return DIVQ; }
+"DIVD"              { dprint("DIVD"); arch_instruction("6309", DIVD); }
+"DIVQ"              { dprint("DIVQ"); arch_instruction("6309", DIVQ); }
 
-"EIM"               { dprint("EIM"); if (!strcmp(arch, "6309")) return EIM; }
+"EIM"               { dprint("EIM"); arch_instruction("6309", EIM); }
 
 "EORA"              { dprint("EORA"); return EORA; }
 "EORB"              { dprint("EORB"); return EORB; }
-"EORD"              { dprint("EORD"); if (!strcmp(arch, "6309")) return EORD; }
-"EORR"              { dprint("EORR"); if (!strcmp(arch, "6309")) return EORR; }
+"EORD"              { dprint("EORD"); arch_instruction("6309", EORD); }
+"EORR"              { dprint("EORR"); arch_instruction("6309", EORR); }
 
 "EXG"               { dprint("EXG"); return EXG; }
 
 "INCA"              { dprint("INCA"); return INCA; }
 "INCB"              { dprint("INCB"); return INCB; }
-"INCD"              { dprint("INCD"); if (!strcmp(arch, "6309")) return INCD; }
-"INCE"              { dprint("INCE"); if (!strcmp(arch, "6309")) return INCE; }
-"INCF"              { dprint("INCF"); if (!strcmp(arch, "6309")) return INCF; }
-"INCW"              { dprint("INCW"); if (!strcmp(arch, "6309")) return INCW; }
+"INCD"              { dprint("INCD"); arch_instruction("6309", INCD); }
+"INCE"              { dprint("INCE"); arch_instruction("6309", INCE); }
+"INCF"              { dprint("INCF"); arch_instruction("6309", INCF); }
+"INCW"              { dprint("INCW"); arch_instruction("6309", INCW); }
 "INC"               { dprint("INC"); return INC; }
 
 "JMP"               { dprint("JMP"); return JMP; }
@@ -193,17 +196,17 @@ int yywrap() {
 
 "LDA"               { dprint("LDA"); return LDA; }
 "LDB"               { dprint("LDB"); return LDB; }
-"LDE"               { dprint("LDE"); if (!strcmp(arch, "6309")) return LDE; }
-"LDF"               { dprint("LDF"); if (!strcmp(arch, "6309")) return LDF; }
+"LDE"               { dprint("LDE"); arch_instruction("6309", LDE); }
+"LDF"               { dprint("LDF"); arch_instruction("6309", LDF); }
 "LDD"               { dprint("LDD"); return LDD; }
 "LDS"               { dprint("LDS"); return LDS; }
 "LDU"               { dprint("LDU"); return LDU; }
-"LDW"               { dprint("LDW"); if (!strcmp(arch, "6309")) return LDW; }
+"LDW"               { dprint("LDW"); arch_instruction("6309", LDW); }
 "LDX"               { dprint("LDX"); return LDX; }
 "LDY"               { dprint("LDY"); return LDY; }
-"LDBT"              { dprint("LDBT"); if (!strcmp(arch, "6309")) return LDBT; }
-"LDMD"              { dprint("LDMD"); if (!strcmp(arch, "6309")) return LDMD; }
-"LDQ"               { dprint("LDQ"); if (!strcmp(arch, "6309")) return LDQ; }
+"LDBT"              { dprint("LDBT"); arch_instruction("6309", LDBT); }
+"LDMD"              { dprint("LDMD"); arch_instruction("6309", LDMD); }
+"LDQ"               { dprint("LDQ"); arch_instruction("6309", LDQ); }
 
 "LEAS"              { dprint("LEAS"); return LEAS; }
 "LEAU"              { dprint("LEAU"); return LEAU; }
@@ -213,85 +216,85 @@ int yywrap() {
 "LSLA"              { dprint("LSLA"); return LSLA; }
 "LSLB"              { dprint("LSLB"); return LSLB; }
 "LSL"               { dprint("LSL"); return LSL; }
-"LSLD"              { dprint("LSLD"); if (!strcmp(arch, "6309")) return LSLD; }
+"LSLD"              { dprint("LSLD"); arch_instruction("6309", LSLD); }
 
 "LSRA"              { dprint("LSRA"); return LSRA; }
 "LSRB"              { dprint("LSRB"); return LSRB; }
 "LSR"               { dprint("LSR"); return LSR; }
-"LSRD"              { dprint("LSRD"); if (!strcmp(arch, "6309")) return LSRD; }
-"LSRW"              { dprint("LSRW"); if (!strcmp(arch, "6309")) return LSRW; }
+"LSRD"              { dprint("LSRD"); arch_instruction("6309", LSRD); }
+"LSRW"              { dprint("LSRW"); arch_instruction("6309", LSRW); }
 
 "MUL"               { dprint("MUL"); return MUL; }
-"MULD"              { dprint("MULD"); if (!strcmp(arch, "6309")) return MULD; }
+"MULD"              { dprint("MULD"); arch_instruction("6309", MULD); }
 
 "NEGA"              { dprint("NEGA"); return NEGA; }
 "NEGB"              { dprint("NEGB"); return NEGB; }
-"NEGD"              { dprint("NEGD"); if (!strcmp(arch, "6309")) return NEGD; }
+"NEGD"              { dprint("NEGD"); arch_instruction("6309", NEGD); }
 "NEG"               { dprint("NEG"); return NEG; }
 
 "NOP"               { dprint("NOP"); return NOP; }
 
-"OIM"               { dprint("OIM"); if (!strcmp(arch, "6309")) return OIM; }
+"OIM"               { dprint("OIM"); arch_instruction("6309", OIM); }
 
 "ORA"               { dprint("ORA"); return ORA; }
 "ORB"               { dprint("ORB"); return ORB; }
 "ORCC"              { dprint("ORCC"); return ORCC; }
-"ORD"               { dprint("ORD"); if (!strcmp(arch, "6309")) return ORD; }
-"ORR"               { dprint("ORR"); if (!strcmp(arch, "6309")) return ORR; }
+"ORD"               { dprint("ORD"); arch_instruction("6309", ORD); }
+"ORR"               { dprint("ORR"); arch_instruction("6309", ORR); }
 
 "PSHS"              { dprint("PSHS"); return PSHS; }
 "PSHU"              { dprint("PSHU"); return PSHU; }
-"PSHSW"             { dprint("PSHSW"); if (!strcmp(arch, "6309")) return PSHSW; }
-"PSHUW"             { dprint("PSHUW"); if (!strcmp(arch, "6309")) return PSHUW; }
+"PSHSW"             { dprint("PSHSW"); arch_instruction("6309", PSHSW); }
+"PSHUW"             { dprint("PSHUW"); arch_instruction("6309", PSHUW); }
 
 "PULS"              { dprint("PULS"); return PULS; }
 "PULU"              { dprint("PULU"); return PULU; }
-"PULSW"             { dprint("PULSW"); if (!strcmp(arch, "6309")) return PULSW; }
-"PULUW"             { dprint("PULUW"); if (!strcmp(arch, "6309")) return PULUW; }
+"PULSW"             { dprint("PULSW"); arch_instruction("6309", PULSW); }
+"PULUW"             { dprint("PULUW"); arch_instruction("6309", PULUW); }
 
 "ROLA"              { dprint("ROLA"); return ROLA; }
 "ROLB"              { dprint("ROLB"); return ROLB; }
 "ROL"               { dprint("ROL"); return ROL; }
-"ROLD"              { dprint("ROLD"); if (!strcmp(arch, "6309")) return ROLD; }
-"ROLW"              { dprint("ROLW"); if (!strcmp(arch, "6309")) return ROLW; }
+"ROLD"              { dprint("ROLD"); arch_instruction("6309", ROLD); }
+"ROLW"              { dprint("ROLW"); arch_instruction("6309", ROLW); }
 
 "RORA"              { dprint("RORA"); return RORA; }
 "RORB"              { dprint("RORB"); return RORB; }
 "ROR"               { dprint("ROR"); return ROR; }
-"RORD"              { dprint("RORD"); if (!strcmp(arch, "6309")) return RORD; }
-"RORW"              { dprint("RORW"); if (!strcmp(arch, "6309")) return RORW; }
+"RORD"              { dprint("RORD"); arch_instruction("6309", RORD); }
+"RORW"              { dprint("RORW"); arch_instruction("6309", RORW); }
 
 "RTI"               { dprint("RTI"); return RTI; }
 "RTS"               { dprint("RTS"); return RTS; }
 
 "SBCA"              { dprint("SBCA"); return SBCA; }
 "SBCB"              { dprint("SBCB"); return SBCB; }
-"SBCD"              { dprint("SBCD"); if (!strcmp(arch, "6309")) return SBCD; }
-"SBCR"              { dprint("SBCR"); if (!strcmp(arch, "6309")) return SBCR; }
+"SBCD"              { dprint("SBCD"); arch_instruction("6309", SBCD); }
+"SBCR"              { dprint("SBCR"); arch_instruction("6309", SBCR); }
 
 "SEX"               { dprint("SEX"); return SEX; }
-"SEXW"              { dprint("SEXW"); if (!strcmp(arch, "6309")) return SEXW; }
+"SEXW"              { dprint("SEXW"); arch_instruction("6309", SEXW); }
 
 "STA"               { dprint("STA"); return STA; }
 "STB"               { dprint("STB"); return STB; }
-"STE"               { dprint("STE"); if (!strcmp(arch, "6309")) return STE; }
-"STF"               { dprint("STF"); if (!strcmp(arch, "6309")) return STF; }
+"STE"               { dprint("STE"); arch_instruction("6309", STE); }
+"STF"               { dprint("STF"); arch_instruction("6309", STF); }
 "STD"               { dprint("STD"); return STD; }
 "STS"               { dprint("STS"); return STS; }
 "STU"               { dprint("STU"); return STU; }
-"STW"               { dprint("STW"); if (!strcmp(arch, "6309")) return STW; }
+"STW"               { dprint("STW"); arch_instruction("6309", STW); }
 "STX"               { dprint("STX"); return STX; }
 "STY"               { dprint("STY"); return STY; }
-"STBT"              { dprint("STBT"); if (!strcmp(arch, "6309")) return STBT; }
-"STQ"               { dprint("STQ"); if (!strcmp(arch, "6309")) return STQ; }
+"STBT"              { dprint("STBT"); arch_instruction("6309", STBT); }
+"STQ"               { dprint("STQ"); arch_instruction("6309", STQ); }
 
 "SUBA"              { dprint("SUBA"); return SUBA; }
 "SUBB"              { dprint("SUBB"); return SUBB; }
-"SUBE"              { dprint("SUBE"); if (!strcmp(arch, "6309")) return SUBE; }
-"SUBF"              { dprint("SUBF"); if (!strcmp(arch, "6309")) return SUBF; }
+"SUBE"              { dprint("SUBE"); arch_instruction("6309", SUBE); }
+"SUBF"              { dprint("SUBF"); arch_instruction("6309", SUBF); }
 "SUBD"              { dprint("SUBD"); return SUBD; }
-"SUBW"              { dprint("SUBW"); if (!strcmp(arch, "6309")) return SUBW; }
-"SUBR"              { dprint("SUBR"); if (!strcmp(arch, "6309")) return SUBR; }
+"SUBW"              { dprint("SUBW"); arch_instruction("6309", SUBW); }
+"SUBR"              { dprint("SUBR"); arch_instruction("6309", SUBR); }
 
 "SWI"               { dprint("SWI"); return SWI; }
 "SWI2"              { dprint("SWI2"); return SWI2; }
@@ -299,17 +302,17 @@ int yywrap() {
 
 "SYNC"              { dprint("SYNC"); return SYNC; }
 
-"TFM"               { dprint("TFM"); if (!strcmp(arch, "6309")) return TFM; }
+"TFM"               { dprint("TFM"); arch_instruction("6309", TFM); }
 "TFR"               { dprint("TFR"); return TFR; }
 
-"TIM"               { dprint("TIM"); if (!strcmp(arch, "6309")) return TIM; }
+"TIM"               { dprint("TIM"); arch_instruction("6309", TIM); }
 
 "TSTA"              { dprint("TSTA"); return TSTA; }
 "TSTB"              { dprint("TSTB"); return TSTB; }
-"TSTD"              { dprint("TSTD"); if (!strcmp(arch, "6309")) return TSTD; }
-"TSTE"              { dprint("TSTE"); if (!strcmp(arch, "6309")) return TSTE; }
-"TSTF"              { dprint("TSTF"); if (!strcmp(arch, "6309")) return TSTF; }
-"TSTW"              { dprint("TSTW"); if (!strcmp(arch, "6309")) return TSTW; }
+"TSTD"              { dprint("TSTD"); arch_instruction("6309", TSTD); }
+"TSTE"              { dprint("TSTE"); arch_instruction("6309", TSTE); }
+"TSTF"              { dprint("TSTF"); arch_instruction("6309", TSTF); }
+"TSTW"              { dprint("TSTW"); arch_instruction("6309", TSTW); }
 "TST"               { dprint("TST"); return TST; }
 
 
@@ -331,6 +334,7 @@ int yywrap() {
     printf("%d\n", yylval.ivalue);
     return HEXNUM;
 }
+[_A-Z][_A-Z0-9]*:   { dprint("LABEL"); yylval.svalue = yytext; yylval.svalue[strlen(yytext) - 1] = '\0'; return LABEL; }
 [_A-Z][_A-Z0-9]*    { dprint("IDENTIFIER"); yylval.svalue = yytext; return IDENTIFIER; }
 
 ";".*               { dprint("COMMENT"); }
