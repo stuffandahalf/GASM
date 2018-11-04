@@ -203,8 +203,8 @@ instruction : instruction_abx
 
 instruction_abx : ABX
                 {
-                    //printf("ABX: %X\n", 0x3A);
-                    uint8_t opcode[] = { 0x3A };
+                    printf("ABX: %X\n", 0x3A);
+                    //uint8_t opcode[] = { 0x3A };
                     //write_bytes(opcode, sizeof(opcode));
                 }
                 ;
