@@ -327,42 +327,39 @@ int yywrap() {
     printf("%X\n", (uint8_t)yylval.ivalue);
     return DECNUM;
 }
--?($|0x)[0-9A-F]+     {
+
+-?$[0-9A-F]+        {
     dprint("HEXNUM");
-    printf("%s\n", yytext);
+    size_t str_index = 0;
     
-    if (yytext[0] == '$' || yytext[1] == '$') {
-        size_t num_chars = strlen(yytext) + 2;
-        size_t current_index = 0;
-        char *hexnum = calloc(num_chars, sizeof(char));
-        if (yytext[current_index] == '-') {
-            hexnum[current_index++] = '-';
-            //current_index++;
-        }
-        hexnum[current_index++] = '0';
-        hexnum[current_index++] = 'x';
-        do {
-            printf("current index: %ld\n", current_index);
-            hexnum[current_index] = yytext[current_index - 1];
-            printf("%c\n", hexnum[current_index]);
-        } while (yytext[current_index++] != '\0'); // needs to compare current_index - 1 then increment
-        
-        /*while (1) {
-            hexnum[current_index] = yytext[current_index - 1]
-        }*/
-        
-        printf("%s\n", hexnum);
-        
-        yylval.ivalue = (int)strtol(yytext, NULL, 16);
-        
-        free(hexnum);
+    char * hex_str = calloc(strlen(yytext) + 2, sizeof(char));
+    
+    if (yytext[str_index] == '-') {
+        hex_str[str_index] = yytext[str_index];
+        str_index++;
     }
-    else {
-        yylval.ivalue = (int)strtol(yytext, NULL, 16);
-    }
+    hex_str[str_index++] = '0';
+    hex_str[str_index] = 'x';
+    
+    do {
+        hex_str[str_index + 1] = yytext[str_index];
+    } while (yytext[str_index++] != '\0');
+    
+    yylval.ivalue = (int)strtol(hex_str, NULL, 16);
+    printf("%d\n", yylval.ivalue);
+    
+    free(hex_str);
+    
+    return HEXNUM;
+}
+
+-?0x[0-9A-F]+       {
+    dprint("HEXNUM");
+    yylval.ivalue = (int)strtol(yytext, NULL, 16);
     printf("%d\n", yylval.ivalue);
     return HEXNUM;
 }
+
 [_A-Z][_A-Z0-9]*:   { dprint("LABEL"); yylval.svalue = yytext; yylval.svalue[strlen(yytext) - 1] = '\0'; return LABEL; }
 [_A-Z][_A-Z0-9]*    { dprint("IDENTIFIER"); yylval.svalue = yytext; return IDENTIFIER; }
 
