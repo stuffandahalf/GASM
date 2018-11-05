@@ -94,7 +94,7 @@ extern int yylex();
 //extern FILE *out_file;
 
 uint16_t address = 0;
-int yydebug = 1;
+extern int yydebug;
 
 void yyerror(const char *str) {
     fprintf(stderr, "error: %s on line number %d\n", str, line_num);
