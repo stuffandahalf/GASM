@@ -327,10 +327,34 @@ int yywrap() {
     printf("%X\n", (uint8_t)yylval.ivalue);
     return DECNUM;
 }
-($|0x)[0-9A-F]+     {
+-?($|0x)[0-9A-F]+     {
     dprint("HEXNUM");
-    (yytext[0] == '$') ? (yytext++) : (yytext += 2);
-    yylval.ivalue = (int)strtol(yytext, NULL, 16);
+    printf("%s\n", yytext);
+    
+    if (yytext[0] == '$' || yytext[1] == '$') {
+        size_t num_chars = strlen(yytext) + 2;
+        size_t current_index = 0;
+        char *hexnum = calloc(num_chars, sizeof(char));
+        if (yytext[current_index] == '-') {
+            hexnum[current_index] = '-';
+            current_index++;
+        }
+        hexnum[current_index++] = '0';
+        hexnum[current_index++] = 'x';
+        do {
+            hexnum[current_index] = yytext[current_index - 1];
+            printf("%c\n", hexnum[current_index]);
+        } while (yytext[current_index++] != '\0');
+        
+        printf("%s\n", hexnum);
+        
+        yylval.ivalue = (int)strtol(yytext, NULL, 16);
+        
+        free(hexnum);
+    }
+    else {
+        yylval.ivalue = (int)strtol(yytext, NULL, 16);
+    }
     printf("%d\n", yylval.ivalue);
     return HEXNUM;
 }

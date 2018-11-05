@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <getopt.h>
-#include "linkedlist.h"
+//#include "linkedlist.h"
 //#include "as.h"
 //#include "elf.h"
 #include "y.tab.h"
