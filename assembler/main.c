@@ -91,8 +91,8 @@ int main(int argc, char **argv) {
     shstrtab->*/
 
 
-    //yylex();
-    yyparse();
+    yylex();
+    //yyparse();
 
     //for (size_t i = 0; i < labels->size; i++) {
         //label_t *l = /*(label_t *)*/llat(labels, i);

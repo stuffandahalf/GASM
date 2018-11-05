@@ -336,15 +336,20 @@ int yywrap() {
         size_t current_index = 0;
         char *hexnum = calloc(num_chars, sizeof(char));
         if (yytext[current_index] == '-') {
-            hexnum[current_index] = '-';
-            current_index++;
+            hexnum[current_index++] = '-';
+            //current_index++;
         }
         hexnum[current_index++] = '0';
         hexnum[current_index++] = 'x';
         do {
+            printf("current index: %ld\n", current_index);
             hexnum[current_index] = yytext[current_index - 1];
             printf("%c\n", hexnum[current_index]);
-        } while (yytext[current_index++] != '\0');
+        } while (yytext[current_index++] != '\0'); // needs to compare current_index - 1 then increment
+        
+        /*while (1) {
+            hexnum[current_index] = yytext[current_index - 1]
+        }*/
         
         printf("%s\n", hexnum);
         
