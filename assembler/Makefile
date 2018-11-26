@@ -5,39 +5,59 @@ LEXFLAGS=
 YACC=yacc
 YACCFLAGS=-d #--debug --verbose
 
+ISA_DIR=isa
+
+TARGET_DIR=$(ISA_DIR)/$(TARGET)
+BUILD_DIR=build
+DIST_DIR=dist
+
 #OBJS = elf.o linkedlist.o label.o
-OBJS = 
+_LEXER_OBJS=lex.yy.c y.tab.c y.tab.h
+#LEXER_OBJS=$(patsubst %,$(BUILD_DIR)/%,$(_LEXER_OBJS))
+_OBJS=main.o $(_LEXER_OBJS)
+OBJS=$(patsubst %,$(BUILD_DIR)/%,$(_OBJS))
 
-%.o: %.c %.h
-	$(CC) -c $<
+$(BUILD_DIR)/%.o: %.c %.h
+	$(CC) -c $< -o %@
+	
+$(BUILD_DIR)/%.o: %.c
+	$(CC) -c $< -o $@
 
-as-6x09: main.c lex.yy.c y.tab.c y.tab.h $(OBJS)
-	$(CC) -o $@ main.c lex.yy.c y.tab.c $(OBJS)
+.PHONY: all
+all: $(DIST_DIR)/as-$(TARGET)
 
-lex.yy.c: as_lex.l
-	$(LEX) $(LEXFLAGS) $<
+$(DIST_DIR)/as-$(TARGET): $(BUILD_DIR) $(OBJS) $(DIST_DIR)
+	$(CC) -o $@ $(OBJS)
 
-y.tab.c y.tab.h: as_yacc.y
-	$(YACC) -o y.tab.c $(YACCFLAGS) $<
+$(BUILD_DIR)/main.o: main.c $(TARGET_DIR)/arch.h
+	$(CC) -c -include $(TARGET_DIR)/arch.h $< -o $@
+
+$(BUILD_DIR)/lex.yy.c: $(TARGET_DIR)/as_lex.l
+	$(LEX) -o $@ $(LEXFLAGS) $<
+
+$(BUILD_DIR)/y.tab.c $(BUILD_DIR)/y.tab.h: $(TARGET_DIR)/as_yacc.y
+	$(YACC) -o $(BUILD_DIR)/y.tab.c $(YACCFLAGS) $<
+
+$(DIST_DIR):
+	mkdir $(DIST_DIR)
+	
+$(BUILD_DIR):
+	mkdir $(BUILD_DIR)
 
 .PHONY: run
-run: as-6x09
-	./$<
+run: $(DIST_DIR)/as-$(TARGET)
+	$<
 
 .PHONY: debug
-debug: as-6x09
-	valgrind --leak-check=full --track-origins=yes ./$<
+debug: $(DIST_DIR)/as-$(TARGET)
+	valgrind --leak-check=full --track-origins=yes $<
 
 .PHONY: dump
-dump: as-6x09
-	./as-6x09 < test1.S
+dump: $(DIST_DIR)/as-$(TARGET)
+	$< < test1.S
 	hexdump -v -e '/1 "%02x\n"' a.out
 
 .PHONY: clean
 clean:
-	rm -f y.tab.*
-	rm -f lex.yy.c
-	rm -f as-6x09
-	rm -f a.out
-	rm -f y.output
-	rm -f *.o
+	rm -rf build
+	rm -rf dist

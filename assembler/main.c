@@ -6,7 +6,7 @@
 //#include "linkedlist.h"
 //#include "as.h"
 //#include "elf.h"
-#include "y.tab.h"
+//#include "y.tab.h"
 
 
 int yydebug = 1;
@@ -15,18 +15,13 @@ char *out_fname;
 char *format;
 FILE *out_file;
 
-
-#define ARCH_NUM 2
-const char *architectures[] = {
-    "6809",
-    "6309"
-};
+const char *architectures[] = SUPPORTED_ARCH;
 
 bool supported_arch(const char *string);
 //void free_labels(LinkedList *labels);
 
-int main(int argc, char **argv) {
-    char *arch = "6809";
+int main(int argc, char **argv) {    
+    char *arch = DEFAULT_ARCH;
     char *out_fname = "a.out";
     struct label *label_head = NULL;
 
@@ -105,7 +100,7 @@ int main(int argc, char **argv) {
 }
 
 bool supported_arch(const char *string) {
-    for (uint8_t i = 0; i < ARCH_NUM; i++) {
+    for (uint8_t i = 0; i < NUM_ARCH; i++) {
         if (!strcmp(string, architectures[i])) {
             return true;
         }
