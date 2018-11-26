@@ -1,3 +1,7 @@
+#ifndef TARGET
+#$(error TARGET is not set)
+#endif
+
 CC=cc
 CFLAGS=-s
 LEX=lex

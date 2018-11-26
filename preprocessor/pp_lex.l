@@ -4,6 +4,8 @@
 
 unsigned int line_num = 1;
 
+int yywrap();
+
 %}
 
 %%
@@ -17,6 +19,12 @@ unsigned int line_num = 1;
 ";".*\n                 { return COMMENT; }
 \n                      { line_num++; }
 
-.*                      { printf("%s\n", yylval); }
+.*                      { printf("%s\n", yylval.svalue); }
 
 %%
+
+int yywrap() {
+    puts("yywrap is called");
+    //exit(0);
+    return 1;
+}

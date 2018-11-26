@@ -18,11 +18,7 @@ extern YYSTYPE yylval;
 
 int line_num = 1;
 
-int yywrap() {
-    puts("yywrap is called");
-    //exit(0);
-    return 1;
-}
+int yywrap();
 
 %}
 
@@ -368,3 +364,11 @@ int yywrap() {
 [ \t    ]+
 \n                  { line_num++; }
 .
+
+%%
+
+int yywrap() {
+    puts("yywrap is called");
+    //exit(0);
+    return 1;
+}
