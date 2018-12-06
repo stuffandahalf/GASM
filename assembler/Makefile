@@ -3,7 +3,7 @@
 #endif
 
 CC=cc
-CFLAGS=-s
+CFLAGS=
 LEX=lex
 LEXFLAGS=
 YACC=yacc
@@ -16,15 +16,19 @@ BUILD_DIR=build
 DIST_DIR=dist
 
 #OBJS = elf.o linkedlist.o label.o
-_LEXER_OBJS=lex.yy.c y.tab.c y.tab.h
-#LEXER_OBJS=$(patsubst %,$(BUILD_DIR)/%,$(_LEXER_OBJS))
-_OBJS=main.o $(_LEXER_OBJS)
+#_LEXER_OBJS=lex.yy.c y.tab.c y.tab.h
+#_OBJS=main.o $(_LEXER_OBJS)
+#OBJS=$(patsubst %,$(BUILD_DIR)/%,$(_OBJS))
+
+_PARSER_OUTFILES=lex.yy.c y.tab.c y.tab.h
+_PARSER_OBJS=$(patsubst %.c,%.o,$(filter-out %.h,$(_PARSER_OUTFILES)))
+_OBJS=main.o $(_PARSER_OBJS)
 OBJS=$(patsubst %,$(BUILD_DIR)/%,$(_OBJS))
 
-$(BUILD_DIR)/%.o: %.c %.h
+%.o: %.c %.h
 	$(CC) -c $< -o %@
 	
-$(BUILD_DIR)/%.o: %.c
+%.o: %.c
 	$(CC) -c $< -o $@
 
 .PHONY: all
@@ -39,8 +43,14 @@ $(BUILD_DIR)/main.o: main.c $(TARGET_DIR)/arch.h
 $(BUILD_DIR)/lex.yy.c: $(TARGET_DIR)/as_lex.l
 	$(LEX) -o $@ $(LEXFLAGS) $<
 
+$(BUILD_DIR)/lex.yy.o: $(BUILD_DIR)/lex.yy.c $(BUILD_DIR)/y.tab.h
+	$(CC) -c -o $@ $(CFLAGS) $< -ll
+
 $(BUILD_DIR)/y.tab.c $(BUILD_DIR)/y.tab.h: $(TARGET_DIR)/as_yacc.y
 	$(YACC) -o $(BUILD_DIR)/y.tab.c $(YACCFLAGS) $<
+
+$(BUILD_DIR)/y.tab.o: $(BUILD_DIR)/y.tab.c
+	$(CC) -c -o $@ $(CFLAGS) $<
 
 $(DIST_DIR):
 	mkdir $(DIST_DIR)
