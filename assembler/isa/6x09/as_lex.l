@@ -316,7 +316,7 @@ int yywrap();
 "FDB"               { dprint("FDB"); return FDB; }
 "RMB"               { dprint("RMB"); return RMB; }
 
--?[0-9]+            {
+[+-]?[0-9]+            {
     dprint("DECNUM");
     yylval.ivalue = atoi(yytext);
     printf("%X\n", yylval.ivalue);
@@ -324,7 +324,7 @@ int yywrap();
     return DECNUM;
 }
 
--?$[0-9A-F]+        {
+[+-]?$[0-9A-F]+        {
     dprint("HEXNUM");
     size_t str_index = 0;
     
@@ -349,7 +349,7 @@ int yywrap();
     return HEXNUM;
 }
 
--?0x[0-9A-F]+       {
+[+-]?0x[0-9A-F]+       {
     dprint("HEXNUM");
     yylval.ivalue = (int)strtol(yytext, NULL, 16);
     printf("%d\n", yylval.ivalue);

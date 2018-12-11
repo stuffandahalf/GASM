@@ -101,6 +101,11 @@ void yyerror(const char *str) {
     //remove(out_fname);
 }
 
+int is_direct_address(int address) {
+    int bytes = (address / 0xFF) + (address % 0xFF) ? 1 : 0;
+    return bytes < 2;
+}
+
 //void write_bytes(uint8_t *bytes, size_t num);
 
 //label_t *find_label(char *id);
@@ -140,8 +145,13 @@ statement : LABEL
       ///*| PERIOD IDENTIFIER COLON {$<svalue>$ = $<svalue>2; printf("%s\n", $<svalue>2; }*/
       //;
 
+address : IDENTIFIER
+        | direct
+        ;
+
 immediate : POUND DECNUM { $<ivalue>$ = yylval.ivalue; }
           | POUND HEXNUM { $<ivalue>$ = yylval.ivalue; }
+          | POUND IDENTIFIER
           ;
 
 direct : DECNUM
@@ -155,10 +165,6 @@ indexed : OPENBRACKET DECNUM CLOSEBRACKET
 
         }
         ;
-
-extended : DECNUM
-         | HEXNUM
-         ;
 
 instruction : instruction_abx
             | instruction_adca
@@ -206,47 +212,86 @@ instruction_abx : ABX
                     printf("ABX: %X\n", 0x3A);
                     //uint8_t opcode[] = { 0x3A };
                     //write_bytes(opcode, sizeof(opcode));
+                    address++;
                 }
                 ;
 
 instruction_adca : ADCA immediate
                  {
                      printf("ADCA %X\n", $<ivalue>2);
-                     uint8_t opcode[] = { 0x89, $<ivalue>2 };
+                     uint8_t opcode[] = { 0x89 };
                      //write_bytes(opcode, sizeof(opcode));
 
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
                      //write_bytes(opcode, sizeof(imm_value));
+                     
+                     address += 2;
+                 }
+                 | ADCA direct
+                 {
+                     if (is_direct_address($<ivalue>2)) {
+                         uint8_t opcode[] = { 0x99 };
+                         uint8_t dir_value[] = { $<ivalue>2 & 0xFF };
+                         address += 2;
+                         puts("direct");
+                     }
+                     else {
+                         uint8_t opcode[] = { 0xB9 };
+                         uint8_t ext_value[] = { ($<ivalue>2 >> 8) & 0xFF, $<ivalue>2 & 0xFF };
+                         address += 3;
+                         puts("extended");
+                     }
                  }
                  ;
 
 instruction_adcb : ADCB immediate
                  {
+                     printf("ADCB %X\n", $<ivalue>2);
                      uint8_t opcode[] = { 0xC9 };
-                     //write_bytes(opcode, sizeof(opcode));
-
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     //write_bytes(imm_value, sizeof(imm_value));
+                     address += 2;
+                 }
+                 | ADCB direct
+                 {
+                     if (is_direct_address($<ivalue>2)) {
+                        uint8_t opcode[] = { 0xD9 };
+                        uint8_t dir_value[] = { $<ivalue>2 & 0xFF };
+                        address += 2;
+                     }
+                     else {
+                        uint8_t opcode[] = { 0xF9 };
+                        uint8_t ext_value[] = { ($<ivalue>2 >> 8) & 0xFF, $<ivalue>2 & 0xFF };
+                        address += 3;
+                    }
                  }
                  ;
 
 instruction_adcd : ADCD immediate
                  {
                      uint8_t opcode[] = { 0x10, 0x89 };
-                     //write_bytes(opcode, sizeof(opcode));
-
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF, $<ivalue>2 >> 8 };
-                     //write_bytes(imm_value, sizeof(imm_value));
+                     address += 4;
+                 }
+                 | ADCD direct
+                 {
+                     if (is_direct_address($<ivalue>2)) {
+                         uint8_t opcode[] = { 0x10, 0x99 };
+                         uint8_t dir_value[] = { $<ivalue>2 & 0xFF };
+                         address += 3;
+                     }
+                     else {
+                         uint8_t opcode[] = { 0x10, 0xB9 };
+                         uint8_t ext_value[] = { ($<ivalue>2 >> 8) & 0xFF, $<ivalue>2 & 0xFF };
+                         address += 4;
+                     }
                  }
                  ;
 
 instruction_adcr : ADCR immediate
                  {
                      uint8_t opcode[] = { 0x10, 0x31 };
-                     //write_bytes(opcode, sizeof(opcode));
-
                      uint8_t imm_value[] = { $<ivalue>2 & 0xFF };
-                     //write_bytes(imm_value, sizeof(imm_value));
+                     address += 3;
                  }
                  ;
 
